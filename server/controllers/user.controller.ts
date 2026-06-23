@@ -22,6 +22,17 @@ interface IRegisterUser {
 }
 
 
+interface IActivateUser {
+    activationCode: string;
+    token: string
+}
+
+interface IActivationTokenPayload {
+    user: IRegisterUser;
+    hashedActivationCode: string;
+}
+
+
 export const registerUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const { name, email, password, avatar }: IRegisterUser = req.body;
     const isEmailExits = await User.findOne({ email });
@@ -35,7 +46,7 @@ export const registerUser = catchAsync(async (req: Request, res: Response, next:
     }
 
 
-    const { token, activationCode } = createActivationToken(user)
+    const { token, activationCode } = await createActivationToken(user)
     const pathToFile = path.join(import.meta.dirname, "../mails/activation-mail.ejs")
     const data = { user: { name: user.name }, activationCode };
     const html = await ejs.renderFile(pathToFile, data)
@@ -53,26 +64,20 @@ export const registerUser = catchAsync(async (req: Request, res: Response, next:
 
 })
 
-interface IActivateUser {
-    activationCode: string;
-    token: string
-}
-
-const activateUser = catchAsync(async (req: Request, res: Response) => {
-
+export const activateUser = catchAsync(async (req: Request, res: Response) => {
     const { activationCode, token } = req.body
-    const data = jwt.verify(token, process.env.ACTIVATION_TOKEN_SECRET as Secret)
-    conssole.log(data)
-    // const compare = await bcrypt.compare(activationCode, hashedActivationCode)
+    const { user, hashedActivationCode } = jwt.verify(token, process.env.ACTIVATION_TOKEN_SECRET as Secret) as IActivationTokenPayload
 
-    // if (!compare) {
-    //     throw (new ErrorHandler("Invalid activation code", 400))
-    // }
-    // User.create(user)
-    // res.status(200).json({
-    //     success: true,
-    //     message: "Account Activated Successfully"
-    // })
+    const compare = await bcrypt.compare(activationCode, hashedActivationCode)
+    if (!compare) {
+        throw (new ErrorHandler("Invalid activation code", 400))
+    }
+
+    User.create(user)
+    res.status(200).json({
+        success: true,
+        message: "Account Activated Successfully"
+    })
 
 
 
@@ -80,10 +85,9 @@ const activateUser = catchAsync(async (req: Request, res: Response) => {
 
 
 
-const createActivationToken = async (user: IRegisterUser) => {
+const createActivationToken = async (user: IRegisterUser): Promise<{ token: string, activationCode: string }> => {
     const activationCode = Math.floor(1000 + Math.random() * 9000).toString();
     const hashedActivationCode = await bcrypt.hash(activationCode, 10)
-    console.log(activationCode, hashedActivationCode)
     const token = jwt.sign({ user, hashedActivationCode }, process.env.ACTIVATION_TOKEN_SECRET as Secret, {
         expiresIn: "5m"
     })
