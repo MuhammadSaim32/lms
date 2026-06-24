@@ -10,6 +10,8 @@ import ejs from "ejs";
 import path from "path";
 import sendEmail from "../utils/sendMail.js";
 import bcrypt from "bcryptjs"
+import sendTokens from "../utils/jwt.js";
+import { redis } from "../utils/redis.js";
 
 interface IRegisterUser {
     name: string;
@@ -93,3 +95,30 @@ const createActivationToken = async (user: IRegisterUser): Promise<{ token: stri
     })
     return { token, activationCode }
 }
+
+
+export const loginUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email })
+    if (!user) {
+        return next(new ErrorHandler("Invalid email or password", 401));
+    }
+    const isPasswordMatched = await user.comparePassword(password);
+    if (!isPasswordMatched) {
+        return next(new ErrorHandler("Invalid email or password", 401));
+    }
+    sendTokens(user, 200, res)
+
+})
+
+
+export const logoutUser = catchAsync(async (req: Request, res: Response) => {
+    res.clearCookie("refreshToken");
+    res.clearCookie("accessToken");
+    const user = req.user as IUser;
+    // await redis.del(user._id.toString());
+    res.status(200).json({
+        success: true,
+        message: "Logout successful"
+    })
+})
