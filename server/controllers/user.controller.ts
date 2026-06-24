@@ -122,3 +122,47 @@ export const logoutUser = catchAsync(async (req: Request, res: Response) => {
         message: "Logout successful"
     })
 })
+
+export const updateRefreshToken = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const refreshToken = req.cookies.refreshToken || ""
+
+    if (!refreshToken) {
+        throw new ErrorHandler("unAuthorized", 401)
+    }
+
+    const user = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET as Secret) as { id: string }
+
+    if (!user) {
+        throw new ErrorHandler("unAuthorized", 401)
+    }
+
+    const userData = await redis.get(user.id)
+
+    if (!userData) {
+        throw new ErrorHandler("unAuthorized", 401)
+    }
+    const userObj = JSON.parse(userData).user as IUser
+    sendTokens(userObj, 200, res)
+
+})
+
+
+
+export const getUserProfile = catchAsync(async (req: Request, res: Response) => {
+    const user = req.user as IUser;
+    res.status(200).json({
+        success: true,
+        data: {
+            user
+        }
+    })
+})
+
+export const socailLogin = catchAsync(async (req: Request, res: Response) => {
+    const { name, email, avatar } = req.body;
+    let user = await User.findOne({ email });
+    if (!user) {
+        user = await User.create({ name, email, avatar });
+    }
+    sendTokens(user, 200, res);
+});

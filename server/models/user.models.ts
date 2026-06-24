@@ -6,7 +6,7 @@ const emailRegex: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export interface IUser extends Document {
     name: string;
     email: string;
-    password: string;
+    password?: string;
     avatar?: {
         public_id: string;
         url: string;
@@ -40,7 +40,6 @@ const userSchema: Schema<IUser> = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: [true, "Enter your password"],
         minLength: [6, "Password must be at least 6 characters long"]
 
     },
@@ -65,8 +64,9 @@ const userSchema: Schema<IUser> = new mongoose.Schema({
 
 userSchema.pre("save", async function () {
     if (!this.isModified("password")) return
-    this.password = await bcrypt.hash(this.password, 10)
-
+    if (this.password) {
+        this.password = await bcrypt.hash(this.password, 10)
+    }
 })
 
 userSchema.methods.comparePassword = async function (password: string): Promise<boolean> {

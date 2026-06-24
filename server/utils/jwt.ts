@@ -7,8 +7,9 @@ const sendTokens = (user: IUser, statusCode: number, res: Response) => {
     const accessToken = user.giveAccessToken()
     const refreshToken = user.giveRefreshToken()
 
-
-    redis.set(user._id.toString(), JSON.stringify({ user }))
+    const userData = user.toObject();
+    delete userData.password; 
+    redis.set(userData._id.toString(), JSON.stringify({ user:userData }))
 
     res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
@@ -26,6 +27,10 @@ const sendTokens = (user: IUser, statusCode: number, res: Response) => {
     res.status(statusCode).json({
         success: true,
         message: "Login successful",
+        data:{
+            userData,
+            token:accessToken
+        }
     })
 
 
