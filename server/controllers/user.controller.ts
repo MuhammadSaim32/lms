@@ -1,6 +1,3 @@
-
-import dotenv from "dotenv";
-dotenv.config();
 import { type Request, type Response, type NextFunction } from "express";
 import User, { type IUser } from "../models/user.models.js";
 import ErrorHandler from "../utils/ErrorHandler.js";
@@ -12,6 +9,7 @@ import sendEmail from "../utils/sendMail.js";
 import bcrypt from "bcryptjs"
 import sendTokens from "../utils/jwt.js";
 import { redis } from "../utils/redis.js";
+import { v2 as cloudinary } from "cloudinary";
 
 interface IRegisterUser {
     name: string;
@@ -166,3 +164,120 @@ export const socailLogin = catchAsync(async (req: Request, res: Response) => {
     }
     sendTokens(user, 200, res);
 });
+
+
+export const updateUserProfile = catchAsync(async (req: Request, res: Response) => {
+    const user = req.user as IUser;
+    const { name, email } = req.body;
+
+    if (!name && !email) {
+        throw new ErrorHandler("At Least One Field is Required", 400);
+    }
+
+    let dbUser = await User.findOne({ _id: user._id }).select("-password");
+    if (email) {
+        const isEmailExists = await User.findOne({ email });
+
+        if (isEmailExists) {
+            throw new ErrorHandler("Email already exists", 400);
+        }
+    }
+
+    if (!dbUser) {
+        throw new ErrorHandler("User not found", 404);
+    }
+
+    dbUser.email = email || dbUser.email
+    dbUser.name = name || dbUser.name
+
+    await dbUser.save()
+    await redis.set(dbUser._id.toString(), JSON.stringify({ user: dbUser }))
+    res.status(200).json({
+        success: true,
+        message: "Profile updated successfully",
+        data: {
+            user: dbUser
+        }
+    })
+
+
+
+
+})
+
+
+export const updatePassword = catchAsync(async (req: Request, res: Response) => {
+    const user = req.user as IUser;
+    const { oldPassword, newPassword } = req.body;
+
+    const userData = await User.findById(user._id)
+
+    if (oldPassword === newPassword) {
+        throw new ErrorHandler("New password cannot be the same as the old password", 400);
+    }
+
+    if (userData == null) {
+        throw new ErrorHandler("User not found", 404);
+    }
+
+    if (userData.password == undefined) {
+        throw new ErrorHandler("Password not set for this user", 400);
+    }
+
+    if (!(await userData.comparePassword(oldPassword))) {
+        throw new ErrorHandler("Old password is incorrect", 400);
+    }
+
+
+
+    userData.password = newPassword;
+    await userData.save();
+
+
+    res.status(200).json({
+        success: true,
+        message: "Password updated successfully"
+    });
+});
+
+export const updateAvatar = catchAsync(async (req: Request, res: Response) => {
+
+    if (req.body?.avatar == undefined) {
+        throw new ErrorHandler("Avatar is required", 400)
+    }
+
+
+    const { avatar } = req.body;
+
+
+    const user = req.user as IUser;
+    const userdata = await User.findById(user._id)
+
+    if (userdata == null) {
+        throw new ErrorHandler("User not found", 404);
+    }
+
+    if (!avatar) {
+        throw new ErrorHandler("Avatar is required", 400)
+    };
+
+    if (!avatar.public_id == undefined) {
+        await cloudinary.uploader.destroy(avatar.public_id)
+
+    }
+
+    const result = await cloudinary.uploader.upload(avatar)
+    userdata.avatar = {
+        public_id: result.public_id,
+        url: result.secure_url
+    }
+    await userdata.save()
+    await redis.set(userdata._id.toString(), JSON.stringify({ user: userdata }))
+    res.status(200).json({
+        success: true,
+        message: "Avatar updated successfully",
+        data: {
+            user: userdata
+        }
+    })
+})
