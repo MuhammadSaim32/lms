@@ -299,8 +299,37 @@ export const addReplyReview = catchAsync(async (req: Request, res: Response, nex
 })
 
 
+export const getAllCoursesForAdmin = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const courses = await CourseModel.find().sort({ createdAt: -1 })
+
+    res.status(200).json({
+        success: true,
+        message: "Courses Fetched Successfully",
+        data: {
+            courses
+        }
+    })
+
+})
+
+
+export const deleteCourse = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+    const course = await CourseModel.findById(id);
+    if (!course) {
+        throw new ErrorHandler("Course not found", 404);
+    }
+    await course.deleteOne();
+    res.status(200).json({
+        success: true,
+        message: "Course deleted successfully"
+    })
+})
 
 
 //admin role autrized
 //notifcation 
 //send email
+//allso setup cron job for deleteing unpurshased course after 24 hours
+//allso delte fro, the redis a single course so that data might not be stale
+

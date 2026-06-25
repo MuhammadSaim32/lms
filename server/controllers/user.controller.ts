@@ -281,3 +281,52 @@ export const updateAvatar = catchAsync(async (req: Request, res: Response) => {
         }
     })
 })
+
+
+
+export const getAllUsers = catchAsync(async (req: Request, res: Response) => {
+    const users = await User.find().select("-password").sort({ createdAt: -1 })
+    res.status(200).json({
+        success: true,
+        users
+    })
+})
+
+
+
+export const updateRole = catchAsync(async (req: Request, res: Response) => {
+    const { id, role } = req.body;
+    const user = await User.findById(id);
+    if (!user) {
+        throw new ErrorHandler("User not found", 404);
+    }
+    user.role = role;
+    await user.save();
+    res.status(200).json({
+        success: true,
+        message: "Role updated successfully",
+        data: {
+            user
+        }
+    })
+
+})
+
+
+
+export const deleteUser = catchAsync(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const user = await User.findById(id);
+    if (!user) {
+        throw new ErrorHandler("User not found", 404);
+    }
+    await user.deleteOne();
+
+    await redis.del(user._id.toString())
+    res.status(200).json({
+
+        success: true,
+        message: "User deleted successfully"
+    })
+
+})
