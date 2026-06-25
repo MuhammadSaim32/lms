@@ -5,6 +5,7 @@ import cors from "cors"
 import cookieParser from "cookie-parser";
 import ErrorMiddleware from "./middleware/error.js";
 import UserRouter from './routes/user.route.js';
+import CourseRouter from './routes/course.route.js';
 export const app = express();
 
 
@@ -26,7 +27,8 @@ app.get("/test", (_, res) => {
 })
 
 
-app.use("/api/v1",UserRouter)
+app.use("/api/v1", UserRouter)
+app.use("/api/v1", CourseRouter)
 
 app.all("*name", (req, res, next) => {
     const err = new Error(`Route ${req.originalUrl} not exists`) as any
