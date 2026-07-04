@@ -4,8 +4,10 @@ class AuthApi {
     async login(email: string, password: string, url: string) {
         const res = await fetch(url, {
             method: "POST",
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json",
+
             },
             body: JSON.stringify({
                 email,
@@ -60,6 +62,25 @@ class AuthApi {
         return res.json();
     }
 
+
+
+    async profile(url: string) {
+        const res = await fetch(url, {
+            method: "GET",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+
+            },
+
+        })
+
+        if (!res.ok) {
+            throw new Error("Failed to activate");
+        }
+
+        return res.json();
+    }
 }
 
 

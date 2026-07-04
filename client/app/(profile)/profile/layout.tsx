@@ -2,9 +2,9 @@ import Link from "next/link";
 
 const sideBar = [
   { name: "My Account", url: "accounts" },
-  { name: "Change Password", url: "accounts" },
-  { name: "Enrolled Courses", url: "accounts" },
-  { name: "Log Out", url: "accounts" },
+  { name: "Change Password", url: "change" },
+  { name: "Enrolled Courses", url: "enrolled" },
+  { name: "Log Out", url: "logout" },
 ];
 
 export default function RootLayout({
@@ -21,7 +21,7 @@ export default function RootLayout({
           {sideBar.map((item) => {
             return (
               <Link
-                href={`${item.url}`}
+                href={`/profile/${item.url}`}
                 key={item.name}
                 className="text-center bg-amber-700"
               >
