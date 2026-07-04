@@ -1,6 +1,8 @@
 import * as yup from "yup"
 import { useFormik } from 'formik';
 import { Input, Button } from '@mui/material';
+import authApi from "../api/AuthApi"
+import route from "../routes"
 
 
 const loginSchema = yup.object({
@@ -16,9 +18,15 @@ const Login = ({ setRoute }: { setRoute: (val: string) => void }) => {
             password: '',
         },
         validationSchema: loginSchema,
-        onSubmit: values => {
+        onSubmit: async values => {
 
-            console.log("value is entere")
+            try {
+                const res = await authApi.login(values.email, values.password, route.login)
+
+            } catch (error) {
+                console.log(error)
+            }
+
         },
     });
     return (

@@ -1,6 +1,8 @@
 import * as yup from "yup"
 import { useFormik } from 'formik';
 import { Input, Button } from '@mui/material';
+import authApi from "../api/AuthApi"
+import route from "../routes"
 
 
 const loginSchema = yup.object({
@@ -18,9 +20,14 @@ const Singup = ({ setRoute }: { setRoute: (val: string) => void }) => {
             password: '',
         },
         validationSchema: loginSchema,
-        onSubmit: values => {
-
-            setRoute("verification")
+        onSubmit: async values => {
+            try {
+                const res = await authApi.register(values.name, values.email, values.password, route.register)
+                localStorage.setItem("activation_token", res.data.token)
+                setRoute("verification")
+            } catch (error) {
+                console.log(error)
+            }
         },
     });
     return (

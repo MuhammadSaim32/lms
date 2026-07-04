@@ -1,7 +1,13 @@
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import authApi from '../api/AuthApi';
+import route from '../routes';
 
-const Verification = () => {
+interface Props {
+    setRoute: (val: string) => void;
+}
+
+const Verification = ({ setRoute }: Props) => {
     const formik = useFormik({
         initialValues: {
             code1: '',
@@ -15,8 +21,17 @@ const Verification = () => {
             code3: Yup.string().length(1, 'Must be 1 character').required('Required'),
             code4: Yup.string().length(1, 'Must be 1 character').required('Required'),
         }),
-        onSubmit: values => {
-            console.log(values);
+        onSubmit: async values => {
+            const activationCode = values.code1 + values.code2 + values.code3 + values.code4;
+            const token = localStorage.getItem("activation_token") || "";
+
+            try {
+                const res = await authApi.activate(activationCode, token, route.activateUser);
+                localStorage.removeItem("activation_token");
+                setRoute("login");
+            } catch (error) {
+                console.log(error);
+            }
         },
     });
 

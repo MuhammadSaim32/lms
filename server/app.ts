@@ -11,9 +11,7 @@ import NotificationRouter from './routes/notification.route.js';
 export const app = express();
 
 
-app.use(cors({
-    origin: process.env.ORIGIN
-}))
+app.use(cors())
 
 
 app.use(express.json({ limit: "50mb" }))
