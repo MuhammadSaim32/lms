@@ -81,6 +81,29 @@ class AuthApi {
 
         return res.json();
     }
+
+
+    async updateProfile(url: string, { email, name }: { email: string; name: string }) {
+        const res = await fetch(url, {
+            method: "PUT",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+
+            },
+            body: JSON.stringify({
+                email,
+                name,
+            }),
+
+        })
+
+        if (!res.ok) {
+            throw new Error("Failed to activate");
+        }
+
+        return res.json();
+    }
 }
 
 

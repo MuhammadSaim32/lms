@@ -31,7 +31,9 @@ export default function RootLayout({
           })}
         </div>
         {/* children */}
-        <div>{children}</div>
+        <div className="flex justify-center items-center flex-1">
+          {children}
+        </div>
       </div>
     </div>
   );
