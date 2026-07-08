@@ -104,6 +104,28 @@ class AuthApi {
 
         return res.json();
     }
+
+    async updatePassword(url: string, { oldPassword, newPassword }: { oldPassword: string; newPassword: string }) {
+        const res = await fetch(url, {
+            method: "PUT",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+
+            },
+            body: JSON.stringify({
+                oldPassword,
+                newPassword,
+            }),
+
+        })
+
+        if (!res.ok) {
+            throw new Error("Failed to update password");
+        }
+
+        return res.json();
+    }
 }
 
 
