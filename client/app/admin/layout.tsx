@@ -5,9 +5,9 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <body className=" flex h-screen bg-blue-300">
+        <div className=" flex h-screen bg-blue-300 w-screen">
             <AdminSideBar />
             {children}
-        </body>
+        </div>
     );
 }
