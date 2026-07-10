@@ -27,7 +27,7 @@ export default function courseInfo({ setcourseData, setStep }) {
         },
         validationSchema: courseInfoSchema,
         onSubmit: async values => {
-            setcourseData(values)
+            setcourseData((prev: any) => ({ ...prev, courseInfo: values }))
             setStep(2)
 
         },

@@ -21,16 +21,18 @@ interface ILink extends Document {
 }
 
 interface ICourseDatat extends Document {
-    title: string;
-    description: string;
-    videoUrl: string;
-    thumbnail: Object;
     videoSection: string;
-    videoLength: number
-    videoPlayer: string;
-    Links: ILink[];
-    questions: IComment[];
-    suggestion: string
+    videoSectionData: [
+        {
+            title: string;
+            description: string;
+            videoUrl: string;
+            thumbnail: Object;
+            questions: IComment[];
+            suggestion: string
+        }
+    ]
+
 }
 
 
@@ -76,17 +78,19 @@ const linkSchema = new Schema<ILink>({
 })
 
 const courseDataSchema = new Schema<ICourseDatat>({
-    title: { type: String, required: true },
-    description: { type: String, required: true },
-    videoUrl: { type: String, required: true },
-    thumbnail: { type: Object, required: true },
     videoSection: { type: String, required: true },
-    videoLength: { type: Number, required: true },
-    videoPlayer: { type: String, required: true },
-    Links: [linkSchema],
-    questions: [commentSchema],
+    videoSectionData: [
+        {
+            title: { type: String, required: true },
+            description: { type: String, required: true },
+            videoUrl: { type: String, required: true },
+            thumbnail: { type: Object, required: true },
+            questions: [commentSchema],
+            suggestion: { type: String, required: true }
+        }
 
-    suggestion: { type: String, required: true },
+    ],
+
 })
 
 const courseSchema = new Schema<ICourse>({
