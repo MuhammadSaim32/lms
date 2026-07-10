@@ -15,6 +15,32 @@ class CourseApi {
 
         return res.json();
     }
+
+    async getCourses(url: string) {
+        const res = await fetch(url, {
+            method: "GET",
+            credentials: "include",
+        })
+
+        if (!res.ok) {
+            throw new Error("Failed to fetch data");
+        }
+
+        return res.json();
+    }
+
+    async deleteCourse(url: string) {
+        const res = await fetch(url, {
+            method: "DELETE",
+            credentials: "include",
+        })
+
+        if (!res.ok) {
+            throw new Error("Failed to delete course");
+        }
+
+        return res.json();
+    }
 }
 
 const courseApi = new CourseApi();

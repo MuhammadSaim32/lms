@@ -126,8 +126,33 @@ class AuthApi {
 
         return res.json();
     }
-}
 
+    async getUsers(url: string) {
+        const res = await fetch(url, {
+            method: "GET",
+            credentials: "include",
+        })
+
+        if (!res.ok) {
+            throw new Error("Failed to fetch users");
+        }
+
+        return res.json();
+    }
+
+    async deleteUser(url: string) {
+        const res = await fetch(url, {
+            method: "DELETE",
+            credentials: "include",
+        })
+
+        if (!res.ok) {
+            throw new Error("Failed to delete user");
+        }
+
+        return res.json();
+    }
+}
 
 const authApi = new AuthApi();
 export default authApi;
