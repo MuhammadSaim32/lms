@@ -18,7 +18,7 @@ interface FaqItems extends Document {
 
 }
 interface Layout extends Document {
-    type: string,
+    type: string
     faq: FaqItems[],
     categories: Categories[],
     banner: {

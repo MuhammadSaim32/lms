@@ -8,6 +8,7 @@ import UserRouter from './routes/user.route.js';
 import CourseRouter from './routes/course.route.js';
 import OrderRouter from './routes/order.route.js';
 import NotificationRouter from './routes/notification.route.js';
+import LayoutRouter from './routes/layout.route.js';
 export const app = express();
 
 
@@ -30,7 +31,7 @@ app.get("/test", (_, res) => {
 })
 
 
-app.use("/api/v1", UserRouter, OrderRouter, CourseRouter, NotificationRouter)
+app.use("/api/v1", UserRouter, OrderRouter, CourseRouter, NotificationRouter, LayoutRouter)
 
 app.all("*name", (req, res, next) => {
     const err = new Error(`Route ${req.originalUrl} not exists`) as any

@@ -35,6 +35,10 @@ export const routes = {
   // Notification routes
   getAllNotification: `${BASE_URL}/get-all-notification`,
   updateNotificationStatus: (id: string) => `${BASE_URL}/update-notification-status/${id}`,
+
+  // Layout routes
+  createLayout: `${BASE_URL}/create-layout`,
+  getLayout: (type: string) => `${BASE_URL}/get-layout?type=${type}`,
 } as const;
 
 export const route = routes;
