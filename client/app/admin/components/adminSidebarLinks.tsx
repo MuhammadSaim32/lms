@@ -43,7 +43,7 @@ export const sideBaritems = [
     title: "Coustomization",
     children: [
       {
-        url: "/admin",
+        url: "/admin/hero",
         name: "Hero",
         icon: "WebIcon",
       },

@@ -5,7 +5,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <div className=" flex min-h-screen  bg-blue-300 w-screen">
+        <div className=" flex min-h-screen  h-screen bg-blue-300 w-screen">
             <AdminSideBar />
             {children}
         </div>
