@@ -48,7 +48,7 @@ export const sideBaritems = [
         icon: "WebIcon",
       },
       {
-        url: "/admin",
+        url: "/admin/faq",
         name: "Faq",
         icon: "QuizIcon",
       },
@@ -73,7 +73,7 @@ export const sideBaritems = [
     title: "Analytics",
     children: [
       {
-        url: "/admin",
+        url: "/admin/course-analytics",
         name: "Course AnaLytics",
         icon: "BarChartIcon",
       },

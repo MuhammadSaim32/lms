@@ -1,5 +1,5 @@
 class LayoutApi {
-    async createLayout(url: string, data: { type: string; image?: string; title?: string; description?: string }) {
+    async createLayout(url: string, data: any) {
         const res = await fetch(url, {
             method: "POST",
             credentials: "include",
