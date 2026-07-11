@@ -41,6 +41,23 @@ class CourseApi {
 
         return res.json();
     }
+
+    async updateCourse(url: string, data: any) {
+        const res = await fetch(url, {
+            method: "PUT",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        })
+
+        if (!res.ok) {
+            throw new Error("Failed to update course");
+        }
+
+        return res.json();
+    }
 }
 
 const courseApi = new CourseApi();

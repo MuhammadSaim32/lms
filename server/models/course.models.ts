@@ -49,6 +49,7 @@ interface ICourse extends Document {
     benefits?: { title: string }[];
     prerequisites?: { title: string }[];
     name: string;
+    description: string
 }
 
 const commentSchema = new Schema<IComment>({
@@ -106,6 +107,7 @@ const courseSchema = new Schema<ICourse>({
     prerequisites: [{ title: String }],
     courseData: [courseDataSchema],
     name: { type: String, required: true },
+    description: { type: String, required: true }
 })
 
 const CourseModel = model<ICourse>("Course", courseSchema);

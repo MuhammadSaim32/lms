@@ -9,7 +9,7 @@ import courseApi from "../../../api/CourseApi"
 import routes from "../../../routes"
 
 export default function CreateCourse() {
-    const [step, setStep] = useState(3)
+    const [step, setStep] = useState(1)
     const [courseData, setcourseData] = useState({
         courseInfo: {},
         courseOptions: {},
@@ -33,6 +33,7 @@ export default function CreateCourse() {
             tags: info.courseTags ? info.courseTags.split(",").map((t: string) => t.trim()) : [],
             level: info.courseLevel,
             demoUrl: info.demoUrl,
+            description: info.courseDescription,
             benefits: (options.benifits || []).map((b: any) => ({ title: b.value })),
             prerequisites: (options.prevreq || []).map((p: any) => ({ title: p.value })),
             courseData: (content.Sections || []).map((section: any) => ({

@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import courseApi from "../../../api/CourseApi";
 import routes from "../../../routes";
 export default function Courses() {
@@ -45,7 +46,11 @@ export default function Courses() {
                 <td>{val.name}</td>
                 <td>{val.rating}</td>
                 <td>{val.purchased}</td>
-                <td>EDit</td>
+                <td>
+                  <Link href={`/admin/edit-course/${val._id}`} className="cursor-pointer text-blue-500 hover:underline">
+                    Edit
+                  </Link>
+                </td>
                 <td>
                   <button
                     className="cursor-pointer"

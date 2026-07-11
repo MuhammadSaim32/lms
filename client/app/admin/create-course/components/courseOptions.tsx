@@ -3,19 +3,23 @@
 import { useState } from "react"
 
 
-export default function CourseOptions({ setcourseData, setStep }: any) {
-    const [benifits, setBenifits] = useState([{
-        placeholder: "Enter Benigits",
-        value: ""
-    }]);
-    const [prevreq, setPrereq] = useState([{
-        placeholder: "Enter PreReq",
-        value: ""
-    }]);
+export default function CourseOptions({ setcourseData, setStep, initialValues }: any) {
+    const [benifits, setBenifits] = useState(
+        (initialValues?.benifits && initialValues.benifits.length > 0) ? initialValues.benifits : [{
+            placeholder: "Enter Benigits",
+            value: ""
+        }]
+    );
+    const [prevreq, setPrereq] = useState(
+        (initialValues?.prevreq && initialValues.prevreq.length > 0) ? initialValues.prevreq : [{
+            placeholder: "Enter PreReq",
+            value: ""
+        }]
+    );
     const [error, setError] = useState("");
 
 
-    const addNewNode = (index) => {
+    const addNewNode = () => {
 
 
         setBenifits((prev) => {
@@ -26,7 +30,7 @@ export default function CourseOptions({ setcourseData, setStep }: any) {
         })
     }
 
-    const addNewPreqre = (index) => {
+    const addNewPreqre = () => {
 
 
         setPrereq((prev) => {

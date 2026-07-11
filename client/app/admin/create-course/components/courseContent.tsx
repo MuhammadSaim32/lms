@@ -2,7 +2,7 @@ import { useState } from "react"
 import { Formik, Form, Field, FieldArray, ErrorMessage } from 'formik';
 import * as yup from "yup"
 
-export default function courseContent({ setStep, handleSubmit }: any) {
+export default function courseContent({ setStep, handleSubmit, initialValues }: any) {
 
     const courseContentSchema = yup.object({
         Sections: yup.array().of(
@@ -31,7 +31,7 @@ export default function courseContent({ setStep, handleSubmit }: any) {
     return (
         <div className="h-screen w-[80%] border">
             <Formik
-                initialValues={{
+                initialValues={initialValues || {
                     Sections: [
                         {
                             SectionName: "Demo",
@@ -50,6 +50,7 @@ export default function courseContent({ setStep, handleSubmit }: any) {
 
                     ]
                 }}
+                enableReinitialize={true}
                 validationSchema={courseContentSchema}
                 onSubmit={(values) => {
                     handleSubmit(values);

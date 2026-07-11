@@ -1,7 +1,7 @@
 import { useFormik } from "formik";
 import { Input, Button } from "@mui/material";
 import *  as yup from "yup"
-export default function courseInfo({ setcourseData, setStep }) {
+export default function courseInfo({ setcourseData, setStep, initialValues }: any) {
 
 
     const courseInfoSchema = yup.object({
@@ -16,7 +16,7 @@ export default function courseInfo({ setcourseData, setStep }) {
 
 
     const formik = useFormik({
-        initialValues: {
+        initialValues: initialValues || {
             courseName: '',
             courseDescription: '',
             coursePrice: '',
@@ -25,6 +25,7 @@ export default function courseInfo({ setcourseData, setStep }) {
             courseLevel: '',
             demoUrl: '',
         },
+        enableReinitialize: true,
         validationSchema: courseInfoSchema,
         onSubmit: async values => {
             setcourseData((prev: any) => ({ ...prev, courseInfo: values }))
