@@ -77,6 +77,11 @@ export const sideBaritems = [
         name: "Course AnaLytics",
         icon: "BarChartIcon",
       },
+      {
+        url: "/admin/user-analytics",
+        name: "Users AnaLytics",
+        icon: "BarChartIcon",
+      },
     ],
   },
 ];

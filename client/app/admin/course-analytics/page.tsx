@@ -1,143 +1,72 @@
 "use client"
-import {
-    RelativePointer,
-    MouseHandlerDataParam,
-    getRelativeCoordinate,
-    Area,
-    AreaChart,
-    XAxis,
-    YAxis,
-    Cross,
-    useChartWidth,
-    useChartHeight,
-    Legend,
-    Text,
-    TextProps,
-    ZIndexLayer,
-    DefaultZIndexes,
-} from "recharts";
-import { useState, MouseEvent, TouchEvent, useCallback } from "react";
+import { BarChart, Bar, Tooltip, YAxis, XAxis, LabelList } from 'recharts';
 
+export default function CourseAnalytics() {
 
-const TextWithOutline = (textProps: TextProps) => (
-    <Text
-        stroke="white"
-        strokeWidth={3}
-        fill="black"
-        paintOrder="stroke"
-        {...textProps}
-    />
-);
+    const data = [
+        {
+            name: 'Page A',
+            uv: 1,
 
-const PixelCrosshair = ({
-    pointer,
-}: {
-    pointer: RelativePointer | null;
-}) => {
-    const width = useChartWidth();
-    const height = useChartHeight();
-
-    if (pointer == null || width == null || height == null) {
-        return null;
-    }
-
-    return (
-        <ZIndexLayer zIndex={DefaultZIndexes.cursorLine}>
-            <TextWithOutline
-                x={pointer.relativeX + 5}
-                y={0}
-                verticalAnchor="start"
-            >
-                {`x: ${pointer.relativeX}`}
-            </TextWithOutline>
-
-            <TextWithOutline
-                x={width}
-                y={pointer.relativeY + 5}
-                textAnchor="end"
-                verticalAnchor="start"
-            >
-                {`y: ${pointer.relativeY}`}
-            </TextWithOutline>
-
-            <Cross
-                style={{ pointerEvents: "none" }}
-                x={pointer.relativeX}
-                y={pointer.relativeY}
-                top={0}
-                left={0}
-                width={width}
-                height={height}
-                stroke="green"
-                strokeWidth={1}
-                strokeDasharray="4"
-            />
-        </ZIndexLayer>
-    );
-};
-
-export default function CrosshairExample({
-    initialPointers = [],
-}: {
-    initialPointers?: ReadonlyArray<RelativePointer>;
-}) {
-    const [pointers, setPointers] =
-        useState<ReadonlyArray<RelativePointer>>(initialPointers);
-
-    const handleMouseMove = useCallback(
-        (
-            _data: MouseHandlerDataParam,
-            event: MouseEvent<SVGGraphicsElement>
-        ) => {
-            const chartPointer: RelativePointer = getRelativeCoordinate(event);
-            setPointers([chartPointer]);
         },
-        []
-    );
-
-    const handleTouchMove = useCallback(
-        (_data: unknown, event: TouchEvent<SVGGraphicsElement>) => {
-            const chartPointers: RelativePointer[] = getRelativeCoordinate(event);
-            setPointers(chartPointers);
+        {
+            name: 'Page B',
+            uv: 6,
         },
-        []
-    );
+        {
+            name: 'Page C',
+            uv: 6
+        },
+        {
+            name: 'Page D',
+            uv: 1,
+        },
+        {
+            name: 'Page E',
+            uv: 5,
 
-    const handleLeave = useCallback(() => {
-        setPointers([]);
-    }, []);
+        },
+        {
+            name: 'Page F',
+            uv: 3,
 
-    return (
-        <AreaChart
+        },
+        {
+            name: 'Page G',
+            uv: 2
+        },
+    ];
+    return <div className='flex   w-full justify-center items-center'>
+        <BarChart
             style={{
-                width: "100%",
-                maxWidth: "500px",
-                maxHeight: "200px",
-                aspectRatio: 1,
-                touchAction: "none",
+                width: '100%', maxWidth: '1000px', maxHeight: '500px', aspectRatio: 1.618,
             }}
             responsive
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleLeave}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleLeave}
+            data={data}
         >
-            <XAxis dataKey="label" />
-            <YAxis width="auto" />
-
-            <Area
-                type="monotone"
-                dataKey="x"
-                stroke="var(--color-chart-1)"
-                fill="none"
+            <YAxis
+                domain={[0, 8]} /* Enforces Y min of 0 and Y max of 1000 */
+                hide={false}        /* Keeps layout tiny by hiding labels and lines */
+            />
+            <XAxis
+                domain={[0, 8]} /* Enforces Y min of 0 and Y max of 1000 */
+                hide={false}        /* Keeps layout tiny by hiding labels and lines */
+            />
+            <Tooltip
             />
 
-            {pointers.map((pointer, index) => (
-                <PixelCrosshair key={index} pointer={pointer} />
-            ))}
 
-            <Legend />
-            <RechartsDevtools />
-        </AreaChart>
-    );
+            <Bar dataKey="uv" fill="#8884d8">
+                <LabelList
+                    dataKey="uv"
+                    position="top"        /* Places text directly above the bar */
+                    offset={5}           /* Adds 5px space between bar top and text */
+                    fill="#333"          /* Text color */
+                    fontSize={11}        /* Text size */
+                    fontWeight="bold"
+                />
+
+            </Bar>
+        </BarChart>
+    </div>
 }
