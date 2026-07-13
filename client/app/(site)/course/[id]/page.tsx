@@ -1,0 +1,72 @@
+"use client";
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import courseApi from "@/api/CourseApi";
+import { routes } from "@/routes";
+
+export default function CourseDetail() {
+    const params = useParams();
+    const [course, setCourse] = useState(null);
+
+    useEffect(() => {
+        const fetchCourseData = async () => {
+            const id = params?.id as string;
+            if (id) {
+                try {
+                    const response = await courseApi.getCourses(routes.getCourse(id));
+                    setCourse(response.data?.course || null);
+                } catch (error) {
+                    console.error("Failed to fetch course details:", error);
+                }
+            }
+        };
+
+        fetchCourseData();
+    }, [params]);
+    console.log(course)
+
+    return <div className="flex h-screen w-screen  bg-gray-500 justify-between p-6">
+        <div className="w-[65%] flex flex-col gap-6 bg">
+            <h1
+                className="text-white text-2xl"
+            >{course?.name}</h1>
+
+            <div className="flex flex-col gap-3">
+                <h1>What You Will Learn From THis Course</h1>
+                <div className="flex flex-col gap-2">
+                    {course?.benefits.map((val, idx) => (
+                        <div
+                            key={idx}
+                        >{val.title}</div>
+                    ))}
+                </div>
+            </div>
+
+            <div className="flex flex-col gap-3">
+                <h1>What are the prerequisites for this course </h1>
+                <div className="flex flex-col gap-2">
+                    {course?.prerequisites.map((val, idx) => (
+                        <div
+                            key={idx}
+                        >{val.title}</div>
+                    ))}
+                </div>
+            </div>
+
+        </div>
+
+        <div className="">
+
+
+            <iframe width="560" height="315"
+                src={`${course?.demoUrl}`}
+                title="YouTube video player"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share">
+
+            </iframe>
+        </div >
+
+
+
+    </div >;
+}

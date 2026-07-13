@@ -11,8 +11,9 @@ import sendEmail from "../utils/sendMail.js";
 export const uploadCourse = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
 
     const data = req.body;
-    const thumbnail = data.thumbnail;
+    const thumbnail = data.pic;
     if (thumbnail) {
+        console.log("here")
         const uploadResult = await cloudinary.uploader.upload(thumbnail, { folder: "courses" })
         data.thumbnail = {
             public_id: uploadResult.public_id,

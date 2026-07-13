@@ -25,9 +25,11 @@ export default function CreateCourse() {
         const options = updatedData.courseOptions as any;
         const content = updatedData.courseContent as any;
 
+        console.log("here is info", info.pic)
         // Reshape to match backend Mongoose schema exactly
         const payload = {
             name: info.courseName,
+            pic: info.pic,
             price: Number(info.coursePrice),
             estimatedPrice: Number(info.estimatedPrice) || 0,
             tags: info.courseTags ? info.courseTags.split(",").map((t: string) => t.trim()) : [],

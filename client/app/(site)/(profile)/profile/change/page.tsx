@@ -3,8 +3,8 @@
 import * as yup from "yup";
 import { useFormik } from "formik";
 import { Input } from "@mui/material";
-import authApi from "../../../../api/AuthApi";
-import routes from "../../../../routes/index";
+import authApi from "../../../../../api/AuthApi";
+import routes from "../../../../../routes/index";
 
 const PasswordSchema = yup.object({
   oldPassword: yup.string().required("Current password is required"),

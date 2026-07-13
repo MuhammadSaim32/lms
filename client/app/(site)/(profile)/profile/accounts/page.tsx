@@ -4,8 +4,8 @@ import * as yup from "yup";
 import { useFormik } from "formik";
 import { Input } from "@mui/material";
 import { useEffect, useState } from "react";
-import authApi from "../../../../api/AuthApi";
-import routes from "../../../../routes/index";
+import authApi from "../../../../../api/AuthApi";
+import routes from "../../../../../routes/index";
 import Avatar from "@mui/material/Avatar";
 
 const AccountsSchema = yup.object({

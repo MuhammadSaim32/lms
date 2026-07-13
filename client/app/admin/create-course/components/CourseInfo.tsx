@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { useFormik } from "formik";
 import { Input, Button } from "@mui/material";
 import *  as yup from "yup"
 export default function courseInfo({ setcourseData, setStep, initialValues }: any) {
+    const [fileUrl, setFileUrl] = useState<string | null>(null);
 
 
     const courseInfoSchema = yup.object({
@@ -12,6 +14,11 @@ export default function courseInfo({ setcourseData, setStep, initialValues }: an
         courseTags: yup.string().required("Course tags is required"),
         courseLevel: yup.string().required("Course level is required"),
         demoUrl: yup.string().required("Demo url is required"),
+        pic: yup.mixed().required("course pic is requried")
+        // .test('fileSize', 'File size is too large (max 2MB)', (value) => {
+        //     if (!value) return false; // Fail if no file when required
+        //     return value.size <= (2 * 1024 * 1024);
+        // })
     })
 
 
@@ -24,11 +31,24 @@ export default function courseInfo({ setcourseData, setStep, initialValues }: an
             courseTags: '',
             courseLevel: '',
             demoUrl: '',
+            pic: ""
         },
         enableReinitialize: true,
         validationSchema: courseInfoSchema,
         onSubmit: async values => {
+            const base64: string = await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result as string);
+                reader.onerror = reject;
+                reader.readAsDataURL(values.pic as unknown as File);
+            });
+
+
+            values.pic = base64
+            console.log(values)
+
             setcourseData((prev: any) => ({ ...prev, courseInfo: values }))
+
             setStep(2)
 
         },
@@ -143,12 +163,29 @@ export default function courseInfo({ setcourseData, setStep, initialValues }: an
                             <div>{formik.errors.demoUrl}</div>
                         ) : null}
                     </div>
+
+
                 </div>
-                <div className="w-full mt-5">
-                    <input type="file" className="w-full border-2 border-black outline-0"
-                        placeholder="hlo" />
-                </div>
+                <input
+                    type="file"
+                    className="border h-12 text-center"
+                    name="pic"
+                    onChange={(event) => {
+                        formik.setFieldValue('pic', event.currentTarget.files[0]);
+                        const generatedUrl = URL.createObjectURL(event.currentTarget.files[0]);
+                        setFileUrl(generatedUrl);
+                    }}
+                />
+                {formik.errors.pic && <div>{formik.errors.pic}</div>}
+
             </div>
+            {fileUrl && (
+                <img
+                    className="h-72 w-72 rounded-full"
+                    src={fileUrl}
+                    alt="Preview"
+                />
+            )}
             <button type="submit">Submit</button>
         </form >
 
