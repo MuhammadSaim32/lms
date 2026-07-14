@@ -14,13 +14,15 @@ const style = {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: 400,
-    bgcolor: 'background.paper',
+    bgcolor: '#0f172a',
+     color: '#f1f5f9',
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
 };
 
 const CustomModel = ({ open, setOpen, Component, setRoute }: Props) => {
+    
     return (
         <Modal
             open={open}
@@ -29,7 +31,7 @@ const CustomModel = ({ open, setOpen, Component, setRoute }: Props) => {
             aria-describedby="modal-modal-description"
         >
             <Box sx={style}>
-                <Component setRoute={setRoute} />
+                <Component setRoute={setRoute} setOpen={setOpen} />
             </Box>
         </Modal >
     )

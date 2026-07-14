@@ -37,7 +37,7 @@ export const registerUser = catchAsync(async (req: Request, res: Response, next:
     const { name, email, password, avatar }: IRegisterUser = req.body;
     const isEmailExits = await User.findOne({ email });
     if (isEmailExits) {
-        return next(new ErrorHandler("User already exists", 400));
+        throw new ErrorHandler("User already exists", 400);
     }
     const user: IRegisterUser = {
         name,
@@ -99,11 +99,11 @@ export const loginUser = catchAsync(async (req: Request, res: Response, next: Ne
     const { email, password } = req.body;
     const user = await User.findOne({ email })
     if (!user) {
-        return next(new ErrorHandler("Invalid email or password", 401));
+        throw new ErrorHandler("Invalid email or password", 401);
     }
     const isPasswordMatched = await user.comparePassword(password);
     if (!isPasswordMatched) {
-        return next(new ErrorHandler("Invalid email or password", 401));
+        throw new ErrorHandler("Invalid email or password", 401);
     }
     sendTokens(user, 200, res)
 

@@ -6,7 +6,6 @@ import { routes } from "@/routes";
 
 const Hero = () => {
     const [courses, setCourses] = useState<any[]>([]);
-
     useEffect(() => {
         const fetchCourses = async () => {
             try {
@@ -21,7 +20,7 @@ const Hero = () => {
 
     return (
 
-        <div className="bg-slate-900  min-h-screen flex flex-col justify-center items-center text-white border p-10">
+        <div className="bg-black  min-h-screen flex flex-col justify-center items-center text-white border p-10">
             <h1 className="text-3xl mb-8">
                 Elearning
             </h1>

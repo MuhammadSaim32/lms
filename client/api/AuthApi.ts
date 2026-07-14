@@ -15,11 +15,14 @@ class AuthApi {
             }),
         })
 
+        const data = await res.json();
+            console.log("Login response:", data.message); // Debugging line to check the response
+
         if (!res.ok) {
-            throw new Error("Failed to login");
+            throw new Error(data.message);
         }
 
-        return res.json();
+        return data
 
     }
 
@@ -35,12 +38,12 @@ class AuthApi {
                 password,
             }),
         })
-
+        let data = await res.json();
         if (!res.ok) {
-            throw new Error("Failed to register");
+            throw new Error(data.message);
         }
 
-        return res.json();
+        return data;
     }
 
     async activate(activationCode: string, token: string, url: string) {

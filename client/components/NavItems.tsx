@@ -6,6 +6,8 @@ import Singup from "./Singup";
 import verification from "./verification";
 import Avatar from "@mui/material/Avatar";
 import Link from "next/link";
+import { CircularProgress } from "@mui/material"
+import { useAuth } from "../context/AuthContext";
 
 const navElements = [
   {
@@ -14,7 +16,7 @@ const navElements = [
   },
   {
     name: "Courses",
-    url: "courses",
+    url: "#courses",
   },
   {
     name: "About",
@@ -34,7 +36,8 @@ const NavItems = ({ className }: { className: string }) => {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [route, setRoute] = useState("");
-  console.log(route);
+  const { data: userData } = useAuth()
+  console.log("hey",userData?.userData?.avatar?.url)
   return (
     <div className={`${className}`}>
       {navElements.map((item, idx) => {
@@ -50,15 +53,25 @@ const NavItems = ({ className }: { className: string }) => {
         );
       })}
 
-      <button
-        className="text-white"
-        onClick={() => {
-          setRoute("login");
-          setOpen(true);
-        }}
-      >
-        Login
-      </button>
+
+
+      {userData.isLoading ?
+        <CircularProgress size="20px" aria-label="Loading…" /> : (
+          <>
+            {!userData.isAuth && (
+              <button
+                className="text-white"
+                onClick={() => {
+                  setRoute("login");
+                  setOpen(true);
+                }}
+              >
+                Login
+              </button>
+            )}
+          </>
+        )
+      }
       {route == "login" && (
         <CustomModel
           open={open}
@@ -67,6 +80,7 @@ const NavItems = ({ className }: { className: string }) => {
           setRoute={setRoute}
         />
       )}
+
 
       {route == "singup" && (
         <CustomModel
@@ -86,9 +100,20 @@ const NavItems = ({ className }: { className: string }) => {
         />
       )}
 
-      <Link href={"/profile"}>
-        <Avatar sx={{ width: 24, height: 24 }}>H</Avatar>
-      </Link>
+      {userData.isLoading ?
+        <CircularProgress size="20px" aria-label="Loading…" /> : (
+          <>
+            {userData.isAuth && (
+              <Link href={"/profile"}>
+                <Avatar sx={{ width: 24, height: 24 }}
+                  src={`${userData?.userData?.avatar?.url}`}
+                />
+              </Link>
+            )}
+          </>
+        )
+      }
+
     </div>
   );
 };

@@ -1,8 +1,14 @@
+import toast from "react-hot-toast";
 import * as yup from "yup"
 import { useFormik } from 'formik';
-import { Input, Button } from '@mui/material';
+import Input from "./Input";
 import authApi from "../api/AuthApi"
 import route from "../routes"
+import Button from "./Button";
+import GitHubIcon from '@mui/icons-material/GitHub';
+import GoogleIcon from '@mui/icons-material/Google';
+import { useAuth } from "../context/AuthContext";
+
 
 
 const loginSchema = yup.object({
@@ -10,7 +16,8 @@ const loginSchema = yup.object({
     password: yup.string().required("password is required").min(6)
 })
 
-const Login = ({ setRoute }: { setRoute: (val: string) => void }) => {
+const Login = ({ setRoute, setOpen }) => {
+    const { setData } = useAuth()
 
     const formik = useFormik({
         initialValues: {
@@ -18,43 +25,81 @@ const Login = ({ setRoute }: { setRoute: (val: string) => void }) => {
             password: '',
         },
         validationSchema: loginSchema,
-        onSubmit: async values => {
+        onSubmit: async (values) => {
 
+            let res
             try {
-                const res = await authApi.login(values.email, values.password, route.login)
-
-            } catch (error) {
-                console.log(error)
+                res = await authApi.login(values.email, values.password, route.login)
+                toast.success(res.message)
+                setData({ isAuth: true, userData: res.data.user, isLoading: false })
+                setOpen(false)
+            } catch (error: any) {
+                toast.error(error.message)
             }
 
         },
     });
     return (
 
-        <form onSubmit={formik.handleSubmit} className="h-36 flex justify-center flex-col items-center">
-            <div>
-                <label htmlFor="email">Email</label>
+        <form onSubmit={formik.handleSubmit} className="gap-3 flex justify-evenly flex-col items-center ">
+
+            <h1 className="text-2xl font-bold mb-5">Login With Elearning</h1>
+
+            <div className="flex justify-between flex-col">
                 <Input
                     id="email"
                     type="email"
+                    htmtFor={"email"}
+                    placeholder="Jhon@gmail.con"
+                    labelText="Enter Your Email"
+                    className={"w-full mt-2"}
+
+                    error={formik.touched.email && formik.errors.email ? formik.errors.email : null}
                     {...formik.getFieldProps('email')}
                 />
-                {formik.touched.email && formik.errors.email ? (
-                    <div>{formik.errors.email}</div>
-                ) : null}
+
+
             </div>
 
-            <div>           <label htmlFor="password">password</label>
-                <Input id="password" type="password" {...formik.getFieldProps('password')} />
-                {formik.touched.password && formik.errors.password ? (
-                    <div>{formik.errors.password}</div>
-                ) : null}
+            <div className="flex justify-between flex-col">
+                <Input
+                    id="password"
+                    type="password"
+                    htmtFor="password"
+                    placeholder="password!@3"
+                    labelText="Enter the Password"
+                    className="w-full mt-2"
+                    error={formik.touched.password && formik.errors.password ? formik.errors.password : null}
+                    {...formik.getFieldProps('password')}
+
+                />
+
 
             </div>
             <Button
-                onClick={() => setRoute("singup")}
-            >singup</Button>
-            <Button type="submit">Submit</Button>
+                text={formik.isSubmitting ? "Submitting..." : "Login"}
+                type="submit"
+                className={`w-full mr-2a active:bg-blue-900  cursor-pointer hover:bg-blue-700 ${formik.isSubmitting ? "pointer-events-none" : ""}`}
+                disabled={formik.isSubmitting}
+
+            />
+
+            <div className=" flex flex-col mt-2">
+                <div className="font-bold">Or Join with</div>
+                <div className="flex justify-center gap-1 mt-3">
+                    <GitHubIcon />
+                    <GoogleIcon />
+                </div>
+            </div>
+
+            <div>Not Have Any Account?
+                <Button
+                    text="singup"
+                    type="submit"
+                    className={"bg-slate-900 text-blue-500 cursor-pointer"}
+                    onClick={() => setRoute("singup")}
+                />
+            </div>
         </form>
 
     );
