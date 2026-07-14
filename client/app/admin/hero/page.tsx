@@ -62,9 +62,9 @@ export default function Hero() {
             }}
         >
             {({ setFieldValue, dirty, getFieldProps }) => (
-                <Form className="h-[70%] w-[80%] bg-gray-300 mt-2 flex justify-around">
+                <Form className="h-screen w-screen bg-slate-900 mt-2 flex justify-around text-white">
 
-                    <div>
+                    <div className="flex justify-center flex-col">
                         {fileUrl && (
                             <img
                                 className="h-72 w-72 rounded-full"
@@ -96,12 +96,17 @@ export default function Hero() {
                         {dirty && <p>You have an unsaved file selected.</p>}
                     </div>
 
-                    <div>
-                        <input type="text" className="border"  {...getFieldProps('title')} />
+                    <div className="flex flex-col justify-center h-auto w-[45%] gap-7">
                         <textarea
-                            className="border"
+                            className=" text-6xl overflow-clip h-auto  outline-0 field-sizing-content"
                             {...getFieldProps('subTitle')}
+
                         ></textarea>
+                        <textarea
+                            className="text-2xl overflow-clip h-auto  outline-0 field-sizing-content"
+                            {...getFieldProps('title')}
+                        ></textarea>
+
                     </div>
                 </Form>
             )}

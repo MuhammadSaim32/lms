@@ -20,6 +20,7 @@
     "react-hot-toast": "^2.6.0",
     "react-redux": "^9.3.0",
     "recharts": "^3.9.2",
+    "tailwind-scrollbar": "^4.0.2",
     "yup": "^1.7.1"
   },
   "devDependencies": {

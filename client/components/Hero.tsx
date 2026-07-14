@@ -2,10 +2,15 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import courseApi from "@/api/CourseApi";
+import layoutApi from "@/api/LayoutApi";
 import { routes } from "@/routes";
+import Image from "next/image";
+
 
 const Hero = () => {
-    const [courses, setCourses] = useState<any[]>([]);
+    const [courses, setCourses] = useState([]);
+    const [banner, setBanner] = useState(null);
+    console.log("here isbaener", banner)
     useEffect(() => {
         const fetchCourses = async () => {
             try {
@@ -15,12 +20,35 @@ const Hero = () => {
                 console.error("Failed to fetch courses:", error);
             }
         };
+
+        const fetchBanner = async () => {
+            try {
+                const response = await layoutApi.getLayout(routes.getLayout("Banner"));
+                setBanner(response?.layout?.banner || null);
+            } catch (error) {
+                console.error("Failed to fetch banner:", error);
+            }
+        };
+
         fetchCourses();
+        fetchBanner();
     }, []);
 
     return (
 
-        <div className="bg-black  min-h-screen flex flex-col justify-center items-center text-white border p-10">
+        <div className="bg-slate-800  min-h-screen flex flex-col justify-center items-center  border-t-2 border-white p-10">
+
+            <div className="h-screen w-screen bg-slate-800">
+                <div>
+                    {/* <Image
+                        src={`${banner?.image?.url}`}
+                        alt="Profile picture"
+                        width={200}
+                        height={200}
+                    /> */}
+                </div>
+            </div>
+
             <h1 className="text-3xl mb-8">
                 Elearning
             </h1>

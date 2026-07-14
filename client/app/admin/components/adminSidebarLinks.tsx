@@ -5,7 +5,7 @@ export const sideBaritems = [
       {
         url: "/admin",
         name: "Dashboard",
-        icon: "DashboardIcon",
+        icon: "LeaderboardIcon",
       },
     ],
   },
@@ -80,6 +80,11 @@ export const sideBaritems = [
       {
         url: "/admin/user-analytics",
         name: "Users AnaLytics",
+        icon: "BarChartIcon",
+      },
+      {
+        url: "/admin/user-analytics",
+        name: "Orders AnaLytics",
         icon: "BarChartIcon",
       },
     ],
