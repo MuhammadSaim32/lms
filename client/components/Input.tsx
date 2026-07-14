@@ -1,9 +1,9 @@
-export default function Input({ htmtFor, labelText, className, ...props }) {
+export default function Input({labelclassName, htmtFor, labelText, className, ...props }) {
     return (
         <div
          >
             <label htmlFor={htmtFor} 
-            className="font-bold"
+            className={`font-bold ${labelclassName}`}
             >{labelText}</label>
 
             <input

@@ -16,7 +16,6 @@ class AuthApi {
         })
 
         const data = await res.json();
-            console.log("Login response:", data.message); // Debugging line to check the response
 
         if (!res.ok) {
             throw new Error(data.message);
@@ -100,12 +99,16 @@ class AuthApi {
             }),
 
         })
+        if (res.status == 401) {
+            window.location.href = "/";
 
-        if (!res.ok) {
-            throw new Error("Failed to activate");
         }
 
-        return res.json();
+        const data = await res.json();
+        if (!res.ok) {
+            throw new Error(data.message || "Ubable  to update Profile");
+        }
+        return data;
     }
 
     async updatePassword(url: string, { oldPassword, newPassword }: { oldPassword: string; newPassword: string }) {
@@ -122,12 +125,14 @@ class AuthApi {
             }),
 
         })
+        const data = await res.json();
 
         if (!res.ok) {
-            throw new Error("Failed to update password");
+            throw new Error(data.message || "Failed to update password");
         }
 
-        return res.json();
+        return data
+
     }
 
     async getUsers(url: string) {
@@ -154,6 +159,21 @@ class AuthApi {
         }
 
         return res.json();
+    }
+
+    async logout(url: string) {
+        const res = await fetch(url, {
+            method: "GET",
+            credentials: "include",
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            throw new Error(data.message || "Logout failed");
+        }
+
+        return data;
     }
 }
 

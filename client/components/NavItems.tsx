@@ -37,7 +37,7 @@ const NavItems = ({ className }: { className: string }) => {
   const [open, setOpen] = useState(false);
   const [route, setRoute] = useState("");
   const { data: userData } = useAuth()
-  console.log("hey",userData?.userData?.avatar?.url)
+  console.log("hey", userData?.userData?.avatar?.url)
   return (
     <div className={`${className}`}>
       {navElements.map((item, idx) => {
@@ -60,7 +60,7 @@ const NavItems = ({ className }: { className: string }) => {
           <>
             {!userData.isAuth && (
               <button
-                className="text-white"
+                className="text-white cursor-pointer"
                 onClick={() => {
                   setRoute("login");
                   setOpen(true);

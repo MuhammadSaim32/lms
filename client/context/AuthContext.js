@@ -7,7 +7,7 @@ import { createContext ,useContext} from 'react';
 export const AuthContext = createContext({ isAuth: false, userData: null,isLoading:false ,setData: () => { } });
 
 function AuthProvider({ children }) {
-    const [data, setData] = useState({ isAuth: false, userData: null,isLoading:false })
+    const [data, setData] = useState({ isAuth: false, userData: null,isLoading:true })
 
     const fetchUserData = async () => {
         setData((Prev)=>({...Prev,isLoading:true}))
