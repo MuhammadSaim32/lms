@@ -1,18 +1,18 @@
 "use Client"
 
 import { useState } from "react"
-
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 export default function CourseOptions({ setcourseData, setStep, initialValues }: any) {
     const [benifits, setBenifits] = useState(
         (initialValues?.benifits && initialValues.benifits.length > 0) ? initialValues.benifits : [{
-            placeholder: "Enter Benigits",
+            placeholder: "Enter Benefits",
             value: ""
         }]
     );
     const [prevreq, setPrereq] = useState(
         (initialValues?.prevreq && initialValues.prevreq.length > 0) ? initialValues.prevreq : [{
-            placeholder: "Enter PreReq",
+            placeholder: "Enter Prerequisites",
             value: ""
         }]
     );
@@ -24,7 +24,7 @@ export default function CourseOptions({ setcourseData, setStep, initialValues }:
 
         setBenifits((prev) => {
             return [...prev, {
-                placeholder: "Enter Benigits",
+                placeholder: "Enter Benefits",
                 value: ""
             }]
         })
@@ -35,7 +35,7 @@ export default function CourseOptions({ setcourseData, setStep, initialValues }:
 
         setPrereq((prev) => {
             return [...prev, {
-                placeholder: "Enter PreReq",
+                placeholder: "Enter Prerequisites",
                 value: ""
             }]
         })
@@ -43,17 +43,17 @@ export default function CourseOptions({ setcourseData, setStep, initialValues }:
 
 
     return (
-        <div className="border h-screen justify-center flex flex-col items-center gap-3">
-            <div className="flex flex-col w-[50%]">
-                <h1 className="text-xl">
-                    what are the benifits for students in this course?
+        <div className="border h-screen justify-center  flex flex-col items-center gap-3">
+            <div className="flex flex-col w-[70%] text-white mt-4">
+                <h1 className="text-xl font-bold mb-3">
+                    What are the benefits for students in this course?
                 </h1>
                 <div>
                     {benifits.map((val, index) => {
                         return (
-                            <div className="p-2" key={index}>
+                            <div className="mb-2" key={index}>
                                 <input type="text"
-                                    className="w-full outline-0 border"
+                                    className="w-full p-2 outline-0 border-2 border-gray-300 bg-transparent text-white"
                                     placeholder={val.placeholder}
                                     value={val.value}
                                     onChange={(e) => {
@@ -66,23 +66,25 @@ export default function CourseOptions({ setcourseData, setStep, initialValues }:
                         )
                     })}
                     <button
+                        className="cursor-pointer mt-1"
                         onClick={() => {
                             addNewNode()
                         }}
-                    >add new Node
+                    >
+                        <AddCircleIcon />
                     </button>
                 </div>
             </div>
-            <div className="flex flex-col w-[50%]">
-                <h1 className="text-xl">
-                    what are the PreReq  for students in this course?
+            <div className="flex flex-col w-[70%] text-white mt-4">
+                <h1 className="text-xl font-bold mb-3">
+                    What are the prerequisites for students in this course?
                 </h1>
                 <div>
                     {prevreq.map((val, index) => {
                         return (
-                            <div className="p-2" key={index}>
+                            <div className="mb-2" key={index}>
                                 <input type="text"
-                                    className="w-full outline-0 border"
+                                    className="w-full p-2 outline-0 border-2 border-gray-300 bg-transparent text-white"
                                     placeholder={val.placeholder}
                                     value={val.value}
                                     onChange={(e) => {
@@ -95,17 +97,20 @@ export default function CourseOptions({ setcourseData, setStep, initialValues }:
                         )
                     })}
                     <button
+                        className="cursor-pointer mt-1"
                         onClick={() => {
                             addNewPreqre()
                         }}
-                    >add new Node
+                    >
+                        <AddCircleIcon />
                     </button>
                 </div>
             </div>
 
-            <div className="flex w-[50%] justify-between">
-                <button onClick={() => setStep(1)}>Previous</button>
+            <div className="flex w-[50%] justify-between mt-8 text-white">
+                <button className="cursor-pointer bg-purple-700 p-2 px-6 rounded" onClick={() => setStep(1)}>Previous</button>
                 <button
+                    className="cursor-pointer bg-purple-700 p-2 px-6 rounded"
                     onClick={() => {
                         const isBenifitsValid = benifits.every(b => b.value.trim().length >= 3);
                         const isPrevreqValid = prevreq.every(p => p.value.trim().length >= 3);

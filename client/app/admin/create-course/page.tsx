@@ -44,13 +44,13 @@ export default function CreateCourse() {
                     title: item.Videotitle,
                     description: item.Videodescription,
                     videoUrl: item.Videourl,
-                    thumbnail: {},
+                    videoLength: item.videoLength,
                     suggestion: item.linkTitle || "",
                 })),
             })),
         };
 
-        console.log("Submitting course payload:", payload);
+
 
         try {
             const response = await courseApi.createCourse(routes.uploadCourse, payload);
@@ -69,7 +69,7 @@ export default function CreateCourse() {
             {step == 1 && <CourseInfo setcourseData={setcourseData} setStep={setStep} />}
             {step == 2 && <CourseOptions setcourseData={setcourseData} setStep={setStep} />}
             {step == 3 && <CourseContent handleSubmit={handleSubmit} setStep={setStep} />}
-            {step == 4 && <CoursePreview />}
+            {step == 4 && <CoursePreview courseData={courseData} />}
 
 
         </div>

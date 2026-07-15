@@ -30,6 +30,7 @@ interface ICourseDatat extends Document {
             thumbnail: Object;
             questions: IComment[];
             suggestion: string
+            videoLength: string
         }
     ]
 
@@ -51,6 +52,7 @@ interface ICourse extends Document {
     name: string;
     description: string
     thumbnail: Object
+    categories: string[]
 }
 
 const commentSchema = new Schema<IComment>({
@@ -86,9 +88,10 @@ const courseDataSchema = new Schema<ICourseDatat>({
             title: { type: String, required: true },
             description: { type: String, required: true },
             videoUrl: { type: String, required: true },
-            thumbnail: { type: Object, required: true },
+            videoLength: { type: Object, required: true },
             questions: [commentSchema],
             suggestion: { type: String, required: true }
+
         }
 
     ],
@@ -112,6 +115,9 @@ const courseSchema = new Schema<ICourse>({
     thumbnail: {
         public_id: { type: String },
         url: { type: String }
+    },
+    categories: {
+        type: [String]
     }
 
 })

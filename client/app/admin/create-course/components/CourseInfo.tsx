@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useFormik } from "formik";
-import { Input, Button } from "@mui/material";
+import { useRef } from "react";
+import Button from "@/components/Button";
 import *  as yup from "yup"
 export default function courseInfo({ setcourseData, setStep, initialValues }: any) {
     const [fileUrl, setFileUrl] = useState<string | null>(null);
-
+    const fileRef = useRef(null)
 
     const courseInfoSchema = yup.object({
         courseName: yup.string().required("Course name is required"),
@@ -14,11 +15,8 @@ export default function courseInfo({ setcourseData, setStep, initialValues }: an
         courseTags: yup.string().required("Course tags is required"),
         courseLevel: yup.string().required("Course level is required"),
         demoUrl: yup.string().required("Demo url is required"),
-        pic: yup.mixed().required("course pic is requried")
-        // .test('fileSize', 'File size is too large (max 2MB)', (value) => {
-        //     if (!value) return false; // Fail if no file when required
-        //     return value.size <= (2 * 1024 * 1024);
-        // })
+        pic: yup.mixed().required("course pic is requried"),
+
     })
 
 
@@ -55,20 +53,20 @@ export default function courseInfo({ setcourseData, setStep, initialValues }: an
     });
     return (
 
-        <form onSubmit={formik.handleSubmit} className="h-screen  flex  w-[80%]  border-2 border-amber-200  items-center justify-center  flex-col">
+        <form onSubmit={formik.handleSubmit} className="h-screen  flex  w-[80%]  border-2  items-center   flex-col overflow-auto scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-800">
 
-            <div className="flex w-[70%] flex-col">
+            <div className="flex w-[80%] flex-col text-white gap-5">
                 <div className="w-full">
                     <label htmlFor="courseName">Course Name</label>
                     <br />
                     <input
-                        className="w-full border-2 border-black outline-0"
+                        className="w-full border-2 border-gray-300 mt-2 outline-0 "
                         id="courseName"
                         type="text"
                         {...formik.getFieldProps('courseName')}
                     />
                     {formik.touched.courseName && formik.errors.courseName ? (
-                        <div>{formik.errors.courseName}</div>
+                        <div className="text-red-500 mt-3">{formik.errors.courseName}</div>
                     ) : null}
                 </div>
 
@@ -76,13 +74,13 @@ export default function courseInfo({ setcourseData, setStep, initialValues }: an
                     <label htmlFor="courseDescription">Course Description</label>
                     <br />
                     <textarea
-                        className="w-full h-36 border-2 border-black outline-0"
+                        className="w-full h-36 border-2 border-gray-300 mt-2 outline-0  resize-none"
 
                         id="courseDescription"
                         {...formik.getFieldProps('courseDescription')}
                     />
                     {formik.touched.courseDescription && formik.errors.courseDescription ? (
-                        <div>{formik.errors.courseDescription}</div>
+                        <div className="text-red-500 mt-3">{formik.errors.courseDescription}</div>
                     ) : null}
                 </div>
                 <div className="flex justify-between w-full">
@@ -90,14 +88,14 @@ export default function courseInfo({ setcourseData, setStep, initialValues }: an
                         <label htmlFor="coursePrice">Course Price</label>
                         <br />
                         <input
-                            className="w-[96%] border-2 border-black outline-0"
+                            className="w-[96%] border-2 border-gray-300 mt-2 outline-0"
 
                             id="coursePrice"
                             type="number"
                             {...formik.getFieldProps('coursePrice')}
                         />
                         {formik.touched.coursePrice && formik.errors.coursePrice ? (
-                            <div>{formik.errors.coursePrice}</div>
+                            <div className="text-red-500 mt-3">{formik.errors.coursePrice}</div>
                         ) : null}
                     </div>
 
@@ -105,14 +103,14 @@ export default function courseInfo({ setcourseData, setStep, initialValues }: an
                         <label htmlFor="estimatedPrice">Estimated Price</label>
                         <br />
                         <input
-                            className="w-full border-2 border-black outline-0"
+                            className="w-full border-2 border-gray-300 mt-2 outline-0"
 
                             id="estimatedPrice"
                             type="number"
                             {...formik.getFieldProps('estimatedPrice')}
                         />
                         {formik.touched.estimatedPrice && formik.errors.estimatedPrice ? (
-                            <div>{formik.errors.estimatedPrice}</div>
+                            <div className="text-red-500 mt-3">{formik.errors.estimatedPrice}</div>
                         ) : null}
                     </div>
                 </div>
@@ -122,14 +120,14 @@ export default function courseInfo({ setcourseData, setStep, initialValues }: an
                     <label htmlFor="courseTags">Course Tags</label>
                     <br />
                     <input
-                        className="w-full border-2 border-black outline-0"
+                        className="w-full border-2 border-gray-300 mt-2 outline-0"
 
                         id="courseTags"
                         type="text"
                         {...formik.getFieldProps('courseTags')}
                     />
                     {formik.touched.courseTags && formik.errors.courseTags ? (
-                        <div>{formik.errors.courseTags}</div>
+                        <div className="text-red-500 mt-3">{formik.errors.courseTags}</div>
                     ) : null}
                 </div>
 
@@ -138,14 +136,14 @@ export default function courseInfo({ setcourseData, setStep, initialValues }: an
                         <label htmlFor="courseLevel">Course Level</label>
                         <br />
                         <input
-                            className="w-[96%] border-2 border-black outline-0"
+                            className="w-[96%] border-2 border-gray-300 mt-2 outline-0"
 
                             id="courseLevel"
                             type="text"
                             {...formik.getFieldProps('courseLevel')}
                         />
                         {formik.touched.courseLevel && formik.errors.courseLevel ? (
-                            <div>{formik.errors.courseLevel}</div>
+                            <div className="text-red-500 mt-3">{formik.errors.courseLevel}</div>
                         ) : null}
                     </div>
 
@@ -153,14 +151,14 @@ export default function courseInfo({ setcourseData, setStep, initialValues }: an
                         <label htmlFor="demoUrl">Demo URL</label>
                         <br />
                         <input
-                            className="w-full border-2 border-black outline-0"
+                            className="w-full border-2 border-gray-300 mt-2 outline-0"
 
                             id="demoUrl"
                             type="text"
                             {...formik.getFieldProps('demoUrl')}
                         />
                         {formik.touched.demoUrl && formik.errors.demoUrl ? (
-                            <div>{formik.errors.demoUrl}</div>
+                            <div className="text-red-500 mt-3">{formik.errors.demoUrl}</div>
                         ) : null}
                     </div>
 
@@ -168,25 +166,41 @@ export default function courseInfo({ setcourseData, setStep, initialValues }: an
                 </div>
                 <input
                     type="file"
-                    className="border h-12 text-center"
+                    ref={fileRef}
+                    className="border h-12 text-center hidden"
                     name="pic"
+
                     onChange={(event) => {
+                        if (!event.currentTarget) return
                         formik.setFieldValue('pic', event.currentTarget.files[0]);
                         const generatedUrl = URL.createObjectURL(event.currentTarget.files[0]);
                         setFileUrl(generatedUrl);
                     }}
                 />
-                {formik.errors.pic && <div>{formik.errors.pic}</div>}
+
+                <button
+                    type="button"
+                    className="border-2 min-h-14 flex justify-center items-center cursor-pointer  "
+                    onClick={() => {
+                        fileRef.current.click()
+                    }}
+                >
+                    {fileUrl ? (
+                        <img
+                            className="h-full w-full"
+                            src={fileUrl}
+                            alt="Preview"
+                        />
+                    ) : (
+                        "Chose the FIle"
+                    )}
+                </button>
+                {formik.touched.pic && formik.errors.pic && <div className="text-red-500 mt-3">{formik.errors.pic}</div>}
 
             </div>
-            {fileUrl && (
-                <img
-                    className="h-72 w-72 rounded-full"
-                    src={fileUrl}
-                    alt="Preview"
-                />
-            )}
-            <button type="submit">Submit</button>
+
+
+            <Button text="Next" className="mt-10 mb-11 cursor-pointer p-4 bg-purple-700" type="submit" />
         </form >
 
 
