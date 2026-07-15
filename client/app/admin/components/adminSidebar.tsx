@@ -49,7 +49,7 @@ export default function AdminSideBar() {
     }
 
 
-    return active ? <div className="h-screen  w-[20%] bg-slate-900 flex-col flex items-center overflow-auto text-white scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-800">
+    return active ? <div className="h-full  w-[20%] bg-slate-900 flex-col flex items-center overflow-auto text-white scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-800">
         <div className=" flex min-h-16 h-[9%] items-center justify-between w-[90%] ">
             <h1>ELEARNING</h1>
             <button

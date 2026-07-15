@@ -3,16 +3,26 @@ import { useState, useEffect } from "react";
 import { Formik, Form } from "formik";
 import layoutApi from "../../../api/LayoutApi";
 import routes from "../../../routes";
+import toast from "react-hot-toast"
+import Button from "../../../components/Button"
+import CameraAltRoundedIcon from '@mui/icons-material/CameraAltRounded';
+import IconButton from '@mui/material/IconButton';
 
+import { useRef } from "react";
 export default function Hero() {
     const [fileUrl, setFileUrl] = useState<string | null>(null);
     const [fileType, setFileType] = useState("");
+    const fileInputRef = useRef(null);
     const [initialValues, setInitialValues] = useState({
         file: null,
         title: "",
         subTitle: "",
         imageUrl: "",
     });
+
+    const openFilePicker = () => {
+        fileInputRef.current.click();
+    };
 
     useEffect(() => {
         layoutApi.getLayout(routes.getLayout("Banner")).then((res) => {
@@ -33,49 +43,59 @@ export default function Hero() {
         <Formik
             enableReinitialize
             initialValues={initialValues}
-            onSubmit={async (values, { setSubmitting }) => {
+            onSubmit={async (values) => {
                 try {
+                    const payload = { type: "Banner" };
 
-                    // Convert image file to base64
-                    const base64: string = await new Promise((resolve, reject) => {
-                        const reader = new FileReader();
-                        reader.onload = () => resolve(reader.result as string);
-                        reader.onerror = reject;
-                        reader.readAsDataURL(values.file as unknown as File);
-                    });
+                    if (values.file) {
+                        const base64: string = await new Promise((resolve, reject) => {
+                            const reader = new FileReader();
+                            reader.onload = () => resolve(reader.result as string);
+                            reader.onerror = reject;
+                            reader.readAsDataURL(values.file as unknown as File);
+                        });
+                        payload.image = base64;
+                    }
 
+                    if (values.title !== initialValues.title) payload.title = values.title;
+                    if (values.subTitle !== initialValues.subTitle) payload.subTitle = values.subTitle;
 
-                    await layoutApi.createLayout(routes.createLayout, {
-                        type: "Banner",
-                        image: base64,
-                        title: values.title,
-                        subTitle: values.subTitle,
-                    });
+                    const data = await layoutApi.createLayout(routes.createLayout, payload);
+                    toast.success(data.message);
 
-
-                    console.log("Layout created successfully");
                 } catch (err) {
-                    console.error("Failed to create layout:", err);
-                } finally {
-                    setSubmitting(false);
+                    toast.error(err.message);
                 }
             }}
         >
-            {({ setFieldValue, dirty, getFieldProps }) => (
+            {({ setFieldValue, dirty, getFieldProps, isSubmitting }) => (
                 <Form className="h-screen w-screen bg-slate-900 mt-2 flex justify-around text-white">
 
-                    <div className="flex justify-center flex-col">
+                    <div className="flex justify-center flex-col ">
                         {fileUrl && (
-                            <img
-                                className="h-72 w-72 rounded-full"
-                                src={fileUrl}
-                                alt="Preview"
-                            />
+                            <div className="h-[400px] w-[400px] rounded-full relative overflow-hidden">
+
+                                <img
+                                    className="w-full h-full object-cover"
+                                    src={fileUrl}
+                                    alt="Preview"
+                                />
+                                <button
+                                    className="absolute bottom-16 right-12"
+                                    onClick={openFilePicker}
+
+                                ><CameraAltRoundedIcon /></button>
+                            </div>
                         )}
+
+
                         <input
                             type="file"
+                            ref={fileInputRef}
                             accept="image/*,video/*,audio/*"
-                            className="bg-red-600 rounded-full  w-5 h-5 "
+                            className="bg-red-600 rounded-full  w-5 h-5 hidden"
+                            placeholder="chose file"
+
                             onChange={(e) => {
                                 const selectedFile = e.target.files[0];
                                 if (!selectedFile) return;
@@ -88,12 +108,7 @@ export default function Hero() {
                             }}
                         />
 
-                        {/* Disable submit until a file is actually picked */}
-                        <button type="submit" disabled={!dirty}>
-                            Upload
-                        </button>
 
-                        {dirty && <p>You have an unsaved file selected.</p>}
                     </div>
 
                     <div className="flex flex-col justify-center h-auto w-[45%] gap-7">
@@ -107,8 +122,23 @@ export default function Hero() {
                             {...getFieldProps('title')}
                         ></textarea>
 
+
+
+                        <Button
+                            text={`${isSubmitting ? " updating.." : "Update"}`}
+                            type="submit"
+                            className={`disabled:opacity-50 cursor-pointer hover:bg-blue-700 disabled:bg-blue-700`}
+                            disabled={!dirty || isSubmitting}
+                        />
+
+
+
+                        {dirty && <p className="text-red-500 text-xl">You have an unsaved file selected.</p>}
                     </div>
+
+
                 </Form>
+
             )}
         </Formik>
     );

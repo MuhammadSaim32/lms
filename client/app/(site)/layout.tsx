@@ -11,23 +11,23 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className="min-h-screen">
+            <body className="min-h-screen h-screen overflow-x-clip">
                 <AuthProvider>
-                <Header />
-                {children}
-                <Toaster
-                    toastOptions={{
-                        position: 'top-right',
-                        style: {
-                            border: '1px solid #713200',
-                            padding: '16px',
-                            color: '#713200',
-                            minWidth: "350px",
-                            marginRight: "15px",
+                    <Header />
+                    {children}
+                    <Toaster
+                        toastOptions={{
+                            position: 'top-right',
+                            style: {
+                                border: '1px solid #713200',
+                                padding: '16px',
+                                color: '#713200',
+                                minWidth: "350px",
+                                marginRight: "15px",
 
-                        },
-                    }}
-                />
+                            },
+                        }}
+                    />
                 </AuthProvider>
             </body>
         </html>

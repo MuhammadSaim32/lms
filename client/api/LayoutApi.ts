@@ -6,8 +6,9 @@ class LayoutApi {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         });
-        if (!res.ok) throw new Error("Failed to create layout");
-        return res.json();
+        const resdata = await res.json()
+        if (!res.ok) throw new Error(resdata.message || "Failed to create layout");
+        return resdata
     }
 
 
