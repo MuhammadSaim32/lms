@@ -79,7 +79,7 @@ export const getSingleCourse = catchAsync(async (req: Request, res: Response, ne
 
 
     }
-    const course = await CourseModel.findById(courseId).select("-courseData.videoPlayer -courseData.videoUrl -courseData.videoSection -courseData.Links -courseData.questions -courseData.suggestions");
+    const course = await CourseModel.findById(courseId)
 
     await redis.set(courseId, JSON.stringify(course));
 
@@ -162,27 +162,24 @@ export const getCoureseByUser = catchAsync(async (req: Request, res: Response, n
 
 export const addQuestion = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const { question, courseId, contentId } = req.body;
-
     const course = await CourseModel.findById(courseId);
 
     if (!course) {
         throw new ErrorHandler("Course not found", 404);
     }
 
-    const courseData = course.courseData.find((item: any) => item._id.toString() === contentId);
+    let courseData = course.courseData.map((item: any) => item.videoSectionData.find((item) => item._id == contentId));
+
     if (!courseData) {
         throw new ErrorHandler("Content not found", 404);
     }
-
-    if (!courseData.questions) {
-        courseData.questions = [];
-    }
-
     const user = req.user as IUser;
 
-    courseData.questions.push({ question, user });
-
-    //also implment notifcation here for admin when new qwestion added
+    course.courseData.find((item: any) => item.videoSectionData.find((item) => {
+        if (item._id == contentId) {
+            item.questions.push({ question, user })
+        }
+    }));
 
     await course.save();
 
@@ -202,24 +199,31 @@ export const addAnswer = catchAsync(async (req: Request, res: Response, next: Ne
     if (!course) {
         throw new ErrorHandler("Course not found", 404)
     }
-    const courseData = course.courseData.find((item: any) => item._id.toString() === contentId)
+    const courseData = course.courseData.map((item: any) => item.videoSectionData.find((item) => item._id == contentId));
+    console.log("here i courseData", courseData)
+
     if (!courseData) {
         throw new ErrorHandler("Content not found", 404)
     }
-    const question = courseData.questions.find((item: any) => item._id.toString() === questionId)
+    const question = courseData.find((item: any) => item.questions.find((val) => val?._id == questionId))
     if (!question) {
         throw new ErrorHandler("Question not found", 404)
     }
     const user = req.user as IUser
 
+    course.courseData.map((item: any) => item.videoSectionData.find((item) => {
 
-    if (!question.QuestionReply) {
+        if (item._id == contentId) {
 
-        throw new ErrorHandler("This Question is not unable to answer", 400)
-    }
+            item.questions.map((val) => {
+                if (val?._id == questionId) {
+                    val.QuestionReply.push({ answer: answer, user })
+                }
+            })
+        }
+    }));
 
 
-    question.QuestionReply.push({ question: answer, user })
 
 
     //also implment notifcation here for admin when new answer added
@@ -243,9 +247,9 @@ export const addReview = catchAsync(async (req: Request, res: Response, next: Ne
 
 
     const isEligible = req.user!.course.some((item: any) => item.courseId === courseId)
-    if (!isEligible) {
-        throw new ErrorHandler("You are not eligible for adding review to this course", 400);
-    }
+    // if (!isEligible) {
+    //     throw new ErrorHandler("You are not eligible for adding review to this course", 400);
+    // }
 
     if (!course) {
         throw new ErrorHandler("Course not found", 404);

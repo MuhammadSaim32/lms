@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import courseApi from "@/api/CourseApi";
 import { routes } from "@/routes";
+import Link from "next/link";
 
 export default function CourseDetail() {
     const params = useParams();
@@ -55,7 +56,7 @@ export default function CourseDetail() {
 
         </div>
 
-        <div className="">
+        <div className="flex flex-col gap-4">
 
 
             <iframe width="560" height="315"
@@ -64,6 +65,13 @@ export default function CourseDetail() {
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share">
 
             </iframe>
+
+            <Link
+                href={`/course-access/${params?.id}`}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-md text-center "
+            >
+                Enter Course
+            </Link>
         </div >
 
 
