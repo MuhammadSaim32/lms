@@ -7,6 +7,7 @@ import ErrorHandler from "../utils/ErrorHandler.js";
 import { type IUser } from "../models/user.models.js"
 import { type IComment } from "../models/course.models.js"
 import sendEmail from "../utils/sendMail.js";
+import Notification from "../models/notificatoin.models.js";
 
 export const uploadCourse = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
 
@@ -161,9 +162,11 @@ export const getCoureseByUser = catchAsync(async (req: Request, res: Response, n
 
 
 export const addQuestion = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+
     const { question, courseId, contentId } = req.body;
     const course = await CourseModel.findById(courseId);
 
+    const io = req.app.get('io');
     if (!course) {
         throw new ErrorHandler("Course not found", 404);
     }
@@ -181,7 +184,21 @@ export const addQuestion = catchAsync(async (req: Request, res: Response, next: 
         }
     }));
 
+    const notify = new Notification({
+        title: "New Question Added",
+        message: `Question Added on ${course.name}  And on Video`,
+        status: "unread",
+        userId: req.user._id
+    })
+
+
+
+
+    const saved = await notify.save()
+
     await course.save();
+
+    io.emit('notification', saved);
 
     res.status(200).json({
         success: true,

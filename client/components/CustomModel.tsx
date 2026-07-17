@@ -15,14 +15,14 @@ const style = {
     transform: 'translate(-50%, -50%)',
     width: 400,
     bgcolor: '#0f172a',
-     color: '#f1f5f9',
+    color: '#f1f5f9',
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
 };
 
 const CustomModel = ({ open, setOpen, Component, setRoute }: Props) => {
-    
+
     return (
         <Modal
             open={open}

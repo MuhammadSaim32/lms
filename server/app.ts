@@ -2,6 +2,8 @@ import dotenv from 'dotenv';
 dotenv.config()
 import express from "express"
 import cors from "cors"
+import { createServer } from 'http';
+import { Server } from 'socket.io';
 import cookieParser from "cookie-parser";
 import ErrorMiddleware from "./middleware/error.js";
 import UserRouter from './routes/user.route.js';
@@ -9,13 +11,24 @@ import CourseRouter from './routes/course.route.js';
 import OrderRouter from './routes/order.route.js';
 import NotificationRouter from './routes/notification.route.js';
 import LayoutRouter from './routes/layout.route.js';
-export const app = express();
+const app = express();
+export const httpServer = createServer(app)
+const io = new Server(httpServer, {
+    cors: {
+        origin: ["http://localhost:3000"],
+        credentials: true
+    }
+});
+
 
 
 app.use(cors({
-    origin: "http://localhost:3000",
+    origin: ["http://localhost:3000"],
     credentials: true
 }))
+
+app.set('io', io);
+
 
 
 app.use(express.json({ limit: "50mb" }))

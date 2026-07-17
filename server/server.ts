@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 dotenv.config()
-import { app } from './app.js';
+import { httpServer as app } from './app.js';
 import connectDB from './utils/db.js';
 import seedTestUser from './utils/seedUser.js';
 import { v2 as cloudinary } from 'cloudinary';
