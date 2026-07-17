@@ -2,6 +2,7 @@ import express from "express"
 import { deleteUser, updateRole, getAllUsers, registerUser, activateUser, loginUser, logoutUser, updateRefreshToken, getUserProfile, socailLogin, updateUserProfile, updatePassword, updateAvatar } from "../controllers/user.controller.js"
 import { AuthMiddleware } from "../middleware/auth.js"
 const UserRouter = express.Router()
+UserRouter.use(express.json({ limit: "50mb" }))
 
 UserRouter.post("/register", registerUser)
 UserRouter.post("/activate-user", activateUser)

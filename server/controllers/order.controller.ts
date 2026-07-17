@@ -13,7 +13,8 @@ import { v2 as cloudinary } from "cloudinary";
 import Course from "../models/course.models.js";
 import Order from "../models/order.models.js";
 import Notification from "../models/notificatoin.models.js";
-
+import Stripe from "stripe";
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 
 export const createOrder = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -75,3 +76,78 @@ export const getAllOrders = catchAsync(async (req: Request, res: Response) => {
         orders
     })
 })
+
+export const createCheckoutSession = catchAsync(async (req: Request, res: Response) => {
+    const id = req.params.id
+    const course = await Course.findOne({ _id: id })
+    if (!course) {
+        throw new ErrorHandler("course not find", 404)
+    }
+
+    const isCourseAlreadyPurchased = req.user?.course.some((course: any) => course.courseId === id);
+
+    if (isCourseAlreadyPurchased) {
+        throw new ErrorHandler("Course already purchased", 400)
+    }
+    try {
+        const session = await stripe.checkout.sessions.create({
+            payment_method_types: ["card"],
+            mode: "payment",
+            metadata: {
+                user_id: req.user?._id.toString(),
+                courseId: course._id.toString(),
+            },
+            line_items: [
+                {
+                    price_data: {
+                        currency: 'usd',
+                        product_data: {
+                            name: course.name,
+                            images: [course.thumbnail.url],
+
+                        },
+                        unit_amount: course.price * 100,
+
+                    },
+                    quantity: 1
+                },
+            ],
+            success_url: `${process.env.CLIENT_URL}`,
+            cancel_url: `${process.env.CLIENT_URL}`,
+        })
+        res.json({ url: session.url })
+    } catch (e) {
+        res.status(500).json({ error: e.message })
+    }
+})
+
+export const handleStripeWebhook = catchAsync(async (req, res) => {
+    const webhookSecret = process.env.WEBHOOK_SECRET;
+    let event;
+
+    try {
+        const signature = req.headers["stripe-signature"];
+        event = stripe.webhooks.constructEvent(req.body, signature, webhookSecret);
+    } catch (err) {
+        console.log(`⚠️  Webhook signature verification failed: ${err.message}`);
+        return res.sendStatus(400);
+    }
+
+    const data = event.data.object;
+    const eventType = event.type;
+
+    if (eventType === "checkout.session.completed") {
+        const session = event.data.object
+        const userId = session.metadata.user_id;
+        const courseId = session.metadata.courseId;
+        console.log(`Checkout session completed for user ${userId} and order ${courseId}`);
+        const findUser = await User.findById(userId);
+        if (findUser) {
+            findUser.course.push({ courseId: courseId });
+            await findUser.save();
+        }
+
+    }
+
+    res.status(200).end();
+});

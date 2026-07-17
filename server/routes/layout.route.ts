@@ -4,6 +4,8 @@ import { createLayout, getLayout } from "../controllers/layout.controller.js"
 
 const LayoutRouter = express.Router()
 
+LayoutRouter.use(express.json({ limit: "50mb" }))
+
 LayoutRouter.post("/create-layout", AuthMiddleware, createLayout)
 LayoutRouter.get("/get-layout", getLayout)
 

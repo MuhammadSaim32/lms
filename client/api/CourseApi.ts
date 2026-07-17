@@ -58,6 +58,19 @@ class CourseApi {
 
         return res.json();
     }
+
+    async createSession(url: string) {
+        const res = await fetch(url, {
+            method: "GET",
+            credentials: "include",
+        })
+
+        if (!res.ok) {
+            throw new Error("Failed to create checkout session");
+        }
+
+        return res.json();
+    }
 }
 
 const courseApi = new CourseApi();

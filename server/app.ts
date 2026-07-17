@@ -31,7 +31,9 @@ app.set('io', io);
 
 
 
-app.use(express.json({ limit: "50mb" }))
+
+
+
 
 app.use(cookieParser())
 
@@ -44,7 +46,8 @@ app.get("/test", (_, res) => {
 })
 
 
-app.use("/api/v1", UserRouter, OrderRouter, CourseRouter, NotificationRouter, LayoutRouter)
+
+app.use("/api/v1", OrderRouter, UserRouter, CourseRouter, NotificationRouter, LayoutRouter)
 
 app.all("*name", (req, res, next) => {
     const err = new Error(`Route ${req.originalUrl} not exists`) as any

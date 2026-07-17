@@ -2,6 +2,7 @@ import express from "express"
 import { AuthMiddleware } from "../middleware/auth.js"
 import { deleteCourse, getAllCoursesForAdmin, getAllCourses, getSingleCourse, uploadCourse, updateCourse, getCoureseByUser, addQuestion, addAnswer, addReview, addReplyReview, } from "../controllers/course.conroller.js"
 const CourseRouter = express.Router()
+CourseRouter.use(express.json({ limit: "50mb" }))
 
 CourseRouter.post("/upload-course", AuthMiddleware, uploadCourse)
 CourseRouter.put("/update-course/:id", AuthMiddleware, updateCourse)

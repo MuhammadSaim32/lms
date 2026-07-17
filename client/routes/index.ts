@@ -31,6 +31,7 @@ export const routes = {
 
   // Order routes
   createOrder: `${BASE_URL}/create-order`,
+  createSession: (id: string) => `${BASE_URL}/createSession/${id}`,
 
   // Notification routes
   getAllNotification: `${BASE_URL}/get-all-notification`,
