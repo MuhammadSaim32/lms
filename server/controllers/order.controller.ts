@@ -112,8 +112,8 @@ export const createCheckoutSession = catchAsync(async (req: Request, res: Respon
                     quantity: 1
                 },
             ],
-            success_url: `${process.env.CLIENT_URL}`,
-            cancel_url: `${process.env.CLIENT_URL}`,
+            success_url: `${process.env.CLIENT_URL}/payment-success`,
+            cancel_url: `${process.env.CLIENT_URL}/payment-fail`,
         })
         res.json({ url: session.url })
     } catch (e) {
