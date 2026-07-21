@@ -6,7 +6,7 @@ on:                         # WHEN to trigger
       - main
 
 jobs:                      
-  job-name:test ci cd
+  job-name: test ci cd
     runs-on: ubuntu-latest  
     steps:                  
       - name: Step 1 name
