@@ -15,7 +15,7 @@ const navElements = [
     url: "/",
   },
   {
-    name: "Courses",
+    name: "Deploy",
     url: "#courses",
   },
   {
