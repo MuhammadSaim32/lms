@@ -1,0 +1,13 @@
+name: test ci cd         # optional, just a label
+
+on:                         # WHEN to trigger
+  push:
+    branches:
+      - main
+
+jobs:                      
+  job-name:
+    runs-on: ubuntu-latest  
+    steps:                  
+      - name: Step 1 name
+        run: echo "hello"
