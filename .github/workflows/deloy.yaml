@@ -5,9 +5,9 @@ on:                         # WHEN to trigger
     branches:
       - main
 
-jobs:                      
-  job-name: test ci cd
+jobs:             
+  job-name: 
     runs-on: ubuntu-latest  
     steps:                  
       - name: Step 1 name
-        run: echo "hello"
+        run: echo "SSRF"
