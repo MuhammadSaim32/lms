@@ -1,4 +1,4 @@
-name: test ci cd         # optional, just a label
+name: test ci cd labled         # optional, just a label
 
 on:                         # WHEN to trigger
   push:
@@ -6,7 +6,7 @@ on:                         # WHEN to trigger
       - main
 
 jobs:                      
-  job-name:
+  job-name:test ci cd
     runs-on: ubuntu-latest  
     steps:                  
       - name: Step 1 name
