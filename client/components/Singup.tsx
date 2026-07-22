@@ -45,7 +45,7 @@ const Singup = ({ setRoute }: { setRoute: (val: string) => void }) => {
                     id="name"
                     type="text"
                     htmtFor={"name"}
-                    placeholder="Jhon"
+                    placeholder="Enter your name"
                     labelText="Enter Your Name"
                     className={"w-full mt-2"}
 
@@ -61,7 +61,7 @@ const Singup = ({ setRoute }: { setRoute: (val: string) => void }) => {
                     id="email"
                     type="email"
                     htmtFor={"email"}
-                    placeholder="Jhon@gmail.con"
+                    placeholder="Enter your email address"
                     labelText="Enter Your Email"
                     className={"w-full mt-2"}
 
@@ -78,8 +78,8 @@ const Singup = ({ setRoute }: { setRoute: (val: string) => void }) => {
                     id="password"
                     type="password"
                     htmtFor="password"
-                    placeholder="password!@3"
-                    labelText="Enter the Password"
+                    placeholder="Enter your password"
+                    labelText="Enter Your Password"
                     className="w-full mt-2"
                     error={formik.touched.password && formik.errors.password ? formik.errors.password : null}
                     {...formik.getFieldProps('password')}
@@ -89,7 +89,7 @@ const Singup = ({ setRoute }: { setRoute: (val: string) => void }) => {
 
             </div>
             <Button
-                text={formik.isSubmitting ? "Submitting..." : "Singup"}
+                text={formik.isSubmitting ? "Submitting..." : "Sign Up"}
                 type="submit"
                 className={`w-full mr-2a active:bg-blue-900  cursor-pointer hover:bg-blue-700 ${formik.isSubmitting ? "pointer-events-none" : ""}`}
                 disabled={formik.isSubmitting}

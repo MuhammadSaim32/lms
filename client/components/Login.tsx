@@ -50,7 +50,7 @@ const Login = ({ setRoute, setOpen }) => {
                     id="email"
                     type="email"
                     htmtFor={"email"}
-                    placeholder="Jhon@gmail.con"
+                    placeholder="Enter your email address"
                     labelText="Enter Your Email"
                     className={"w-full mt-2"}
 
@@ -66,8 +66,8 @@ const Login = ({ setRoute, setOpen }) => {
                     id="password"
                     type="password"
                     htmtFor="password"
-                    placeholder="password!@3"
-                    labelText="Enter the Password"
+                    placeholder="Enter your password"
+                    labelText="Enter Your Password"
                     className="w-full mt-2"
                     error={formik.touched.password && formik.errors.password ? formik.errors.password : null}
                     {...formik.getFieldProps('password')}
@@ -94,7 +94,7 @@ const Login = ({ setRoute, setOpen }) => {
 
             <div>Not Have Any Account?
                 <Button
-                    text="singup"
+                    text="Sign Up"
                     type="submit"
                     className={"bg-slate-900 text-blue-500 cursor-pointer"}
                     onClick={() => setRoute("singup")}
