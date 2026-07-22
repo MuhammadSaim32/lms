@@ -7,10 +7,27 @@ import Button from "./Button"
 import GitHubIcon from '@mui/icons-material/GitHub';
 import GoogleIcon from '@mui/icons-material/Google';
 import toast from "react-hot-toast";
-const loginSchema = yup.object({
-    name: yup.string().required("name is required"),
-    email: yup.string().required("Email is required"),
-    password: yup.string().required("password is required").min(6)
+const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const signupSchema = yup.object({
+    name: yup
+        .string()
+        .trim() 
+        .required("Name is required")
+        .min(2, "Name must be at least 2 characters")
+        .max(50, "Name cannot exceed 50 characters"),
+    email: yup
+        .string()
+        .trim()
+        .required("Email is required")
+        .min(5, 'Email is too short')
+        .max(254, 'Email cannot exceed 254 characters')
+        .matches(emailRegex, 'Invalid email format'),
+    password: yup
+        .string()
+        .required("Password is required")
+        .min(6)
+        .max(32)
+        .matches(/^\S*$/, 'Spaces are not allowed in password'),
 })
 
 const Singup = ({ setRoute }: { setRoute: (val: string) => void }) => {
@@ -21,7 +38,7 @@ const Singup = ({ setRoute }: { setRoute: (val: string) => void }) => {
             email: '',
             password: '',
         },
-        validationSchema: loginSchema,
+        validationSchema: signupSchema,
         onSubmit: async values => {
             try {
                 const res = await authApi.register(values.name, values.email, values.password, route.register)
