@@ -57,11 +57,12 @@ class AuthApi {
             }),
         })
 
+        const data = await res.json();
         if (!res.ok) {
-            throw new Error("Failed to activate");
+            throw new Error( data.message || "Failed to activate");
         }
 
-        return res.json();
+        return data;
     }
 
 

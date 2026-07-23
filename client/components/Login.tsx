@@ -9,11 +9,18 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import GoogleIcon from '@mui/icons-material/Google';
 import { useAuth } from "../context/AuthContext";
 
+const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 
 const loginSchema = yup.object({
-    email: yup.string().required("Email is required"),
-    password: yup.string().required("password is required").min(6)
+    email: yup.string().required("Email is required")
+        .min(5, 'Email is too short')
+        .max(254, 'Email cannot exceed 254 characters')
+        .matches(emailRegex, 'Invalid email format'),
+        password: yup.string().required("password is required")
+        .min(6)
+        .max(32)
+    .matches(/^\S*$/, 'Spaces are not allowed in password')
 })
 
 const Login = ({ setRoute, setOpen }) => {
@@ -50,7 +57,7 @@ const Login = ({ setRoute, setOpen }) => {
                     id="email"
                     type="email"
                     htmtFor={"email"}
-                    placeholder="Jhon@gmail.con"
+                    placeholder="Enter your email address"
                     labelText="Enter Your Email"
                     className={"w-full mt-2"}
 
@@ -66,8 +73,8 @@ const Login = ({ setRoute, setOpen }) => {
                     id="password"
                     type="password"
                     htmtFor="password"
-                    placeholder="password!@3"
-                    labelText="Enter the Password"
+                    placeholder="Enter your password"
+                    labelText="Enter Your Password"
                     className="w-full mt-2"
                     error={formik.touched.password && formik.errors.password ? formik.errors.password : null}
                     {...formik.getFieldProps('password')}
@@ -94,7 +101,7 @@ const Login = ({ setRoute, setOpen }) => {
 
             <div>Not Have Any Account?
                 <Button
-                    text="singup"
+                    text="Sign Up"
                     type="submit"
                     className={"bg-slate-900 text-blue-500 cursor-pointer"}
                     onClick={() => setRoute("singup")}

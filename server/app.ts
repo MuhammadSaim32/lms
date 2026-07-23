@@ -11,6 +11,7 @@ import CourseRouter from './routes/course.route.js';
 import OrderRouter from './routes/order.route.js';
 import NotificationRouter from './routes/notification.route.js';
 import LayoutRouter from './routes/layout.route.js';
+import morgan from 'morgan';
 const app = express();
 export const httpServer = createServer(app)
 const io = new Server(httpServer, {
@@ -36,7 +37,10 @@ app.set('io', io);
 
 
 app.use(cookieParser())
+app.set('trust proxy', 1);
 
+app.use(cookieParser());
+app.use(morgan(':remote-addr :method :url :status :response-time ms - :date[iso]'));
 
 app.get("/test", (_, res) => {
     res.status(200).json({
