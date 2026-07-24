@@ -14,7 +14,7 @@ const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const signupSchema = yup.object({
     name: yup
         .string()
-        .trim() 
+        .trim()
         .required("Name is required")
         .min(2, "Name must be at least 2 characters")
         .max(50, "Name cannot exceed 50 characters"),
@@ -34,6 +34,21 @@ const signupSchema = yup.object({
 })
 
 const Singup = ({ setRoute }: { setRoute: (val: string) => void }) => {
+
+
+    const handleGoolgeAuth = () => {
+        const params = {
+            client_id: process.env.NEXT_PUBLIC_GOOGE_CLIENT_ID,
+            response_type: "code",
+            redirect_uri: process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI,
+            scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
+            access_type: "online"
+        }
+
+        const urlParams= new URLSearchParams(params).toString()
+    
+        window.location.href=`${process.env.NEXT_PUBLIC_GOOGLE_URI}?${urlParams}`
+    }
 
     const formik = useFormik({
         initialValues: {
@@ -118,11 +133,16 @@ const Singup = ({ setRoute }: { setRoute: (val: string) => void }) => {
             <div className=" flex flex-col mt-2">
                 <div className="font-bold">Or Join with</div>
                 <div className="flex justify-center gap-1 mt-3">
-                <Link href={`${process.env.NEXT_PUBLIC_GITHUB_URI}`} >
-                    
-                    <GitHubIcon />
+                    <Link href={`${process.env.NEXT_PUBLIC_GITHUB_URI}`} >
+
+                        <GitHubIcon />
                     </Link>
-                    <GoogleIcon />
+                    <button
+                    type="button"
+                        className="cursor-pointer"
+                        onClick={handleGoolgeAuth}>
+                        <GoogleIcon />
+                    </button>
                 </div>
             </div>
 

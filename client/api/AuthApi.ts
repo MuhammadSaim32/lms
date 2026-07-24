@@ -63,6 +63,24 @@ class AuthApi {
         return data;
     }
 
+    async googleRegister(code: string, url: string) {
+        const res = await fetch(url, {
+            method: "POST",
+            credentials: 'include',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ code }),
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+            throw new Error(data.message || "Google login failed");
+        }
+
+        return data;
+    }
+
     async activate(activationCode: string, token: string, url: string) {
         const res = await fetch(url, {
             method: "POST",

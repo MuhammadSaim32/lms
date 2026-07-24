@@ -29,7 +29,9 @@ export default function Faq() {
         fetchFaq();
     }, []);
 
-    return <div className="min-h-52 min-w-screen">
+    return <div className="min-h-52 min-w-screen"
+
+        id="faq">
         <h1 className="font-bold text-5xl text-center text-white">Frequently Asked Questions</h1>
 
         <div className="w-full flex justify-center items-center flex-col text-white">

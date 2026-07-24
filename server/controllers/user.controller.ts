@@ -396,6 +396,66 @@ export const githubAuth = catchAsync(async (req: Request, res: Response) => {
         return sendTokens(newUser, 200, res);
     }
 
-   const updatedData = await User.findOneAndUpdate({ email }, { name, avatar: { public_id: "", url: image } }, { new: true })
+    const updatedData = await User.findOneAndUpdate({ email }, { name, avatar: { public_id: "", url: image } }, { new: true })
     sendTokens(updatedData, 200, res);
+})
+
+
+
+export const googleAuth = catchAsync(async (req: Request, res: Response) => {
+    const { code } = req.body;
+
+    if (code == undefined) {
+        throw new ErrorHandler("Code is required", 400)
+    }
+    const tokenResponse = await fetch(process.env.GOOGLE_CODE_EXCHANGE_URI, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        },
+        body: JSON.stringify({
+            client_id: process.env.GOOGE_CLIENT_ID,
+            client_secret: process.env.GOOGE_SECRET,
+            code: code,
+            redirect_uri: process.env.GOOGLE_REDIRECT_URI,
+            grant_type: "authorization_code"
+        })
+    })
+
+    const tokenData = await tokenResponse.json();
+    if (tokenData.error) {
+        throw new ErrorHandler("Google auth failed", 400)
+    }
+    const userInfoResponse = await fetch(process.env.GOOGLE_USER_INFO_URI, {
+        headers: {
+            "Authorization": `Bearer ${tokenData.access_token}`,
+            "Accept": "application/json"
+        }
+    })
+    const userInfo = await userInfoResponse.json();
+    if (!userInfo.verified_email) {
+        throw new ErrorHandler("Google auth failed Email is not verified", 400)
+    }
+
+    const name = userInfo.name 
+    const email = userInfo.email;
+    const image = userInfo.picture;
+
+    const user = await User.findOne({ email });
+
+    if (user && user.provider !== "google") {
+        throw new ErrorHandler(`User with that Email already exists`, 400)
+    }
+
+    if (!user) {
+
+        const newUser = await User.create({ name, email, avatar: { public_id: "", url: image }, provider: "google", isVerified: true });
+        return sendTokens(newUser, 200, res);
+    }
+
+    const updatedData = await User.findOneAndUpdate({ email }, { name, avatar: { public_id: "", url: image } }, { new: true })
+    sendTokens(updatedData, 200, res);
+
+
 })
