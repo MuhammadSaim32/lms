@@ -45,6 +45,42 @@ class AuthApi {
         return data;
     }
 
+    async githubRegister(code: string, url: string) {
+        const res = await fetch(url, {
+            method: "POST",
+            credentials: 'include',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ code }),
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+            throw new Error(data.message || "GitHub register failed");
+        }
+
+        return data;
+    }
+
+    async googleRegister(code: string, url: string) {
+        const res = await fetch(url, {
+            method: "POST",
+            credentials: 'include',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ code }),
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+            throw new Error(data.message || "Google login failed");
+        }
+
+        return data;
+    }
+
     async activate(activationCode: string, token: string, url: string) {
         const res = await fetch(url, {
             method: "POST",
@@ -59,7 +95,7 @@ class AuthApi {
 
         const data = await res.json();
         if (!res.ok) {
-            throw new Error( data.message || "Failed to activate");
+            throw new Error(data.message || "Failed to activate");
         }
 
         return data;

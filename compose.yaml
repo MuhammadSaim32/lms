@@ -4,17 +4,20 @@ services:
       context: ./server
       dockerfile: Dockerfile
     env_file:
-       ./server/.env
+       ./server/.env.production
     ports:
-      - "8000:8000"                        
+      - "8000:8000"
+    restart: unless-stopped  
+                        
 
   client:
     build:
       context: ./client
       dockerfile: Dockerfile
     env_file:
-       ./client/.env.local
+       ./client/.env.production
     ports:
-        - "3000:3000"                  
+        - "3000:3000"
+    restart: unless-stopped
     depends_on:
         - server                       

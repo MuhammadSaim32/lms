@@ -8,7 +8,7 @@ import Button from "./Button";
 import GitHubIcon from '@mui/icons-material/GitHub';
 import GoogleIcon from '@mui/icons-material/Google';
 import { useAuth } from "../context/AuthContext";
-
+import Link from "next/link";
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 
@@ -17,14 +17,27 @@ const loginSchema = yup.object({
         .min(5, 'Email is too short')
         .max(254, 'Email cannot exceed 254 characters')
         .matches(emailRegex, 'Invalid email format'),
-        password: yup.string().required("password is required")
+    password: yup.string().required("password is required")
         .min(6)
         .max(32)
-    .matches(/^\S*$/, 'Spaces are not allowed in password')
+        .matches(/^\S*$/, 'Spaces are not allowed in password')
 })
 
 const Login = ({ setRoute, setOpen }) => {
     const { setData } = useAuth()
+
+    const handleGoogleAuth = () => {
+        const params = {
+            client_id: process.env.NEXT_PUBLIC_GOOGE_CLIENT_ID,
+            response_type: "code",
+            redirect_uri: process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI,
+            scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
+            access_type: "online"
+        }
+
+        const urlParams = new URLSearchParams(params).toString()
+        window.location.href = `${process.env.NEXT_PUBLIC_GOOGLE_URI}?${urlParams}`
+    }
 
     const formik = useFormik({
         initialValues: {
@@ -94,8 +107,16 @@ const Login = ({ setRoute, setOpen }) => {
             <div className=" flex flex-col mt-2">
                 <div className="font-bold">Or Join with</div>
                 <div className="flex justify-center gap-1 mt-3">
-                    <GitHubIcon />
-                    <GoogleIcon />
+                    <Link href={`${process.env.NEXT_PUBLIC_GITHUB_URI}`} >
+                        <GitHubIcon />
+                    </Link>
+                    <button
+                        type="button"
+                        className="cursor-pointer"
+                        onClick={handleGoogleAuth}
+                    >
+                        <GoogleIcon />
+                    </button>
                 </div>
             </div>
 
