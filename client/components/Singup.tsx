@@ -1,3 +1,5 @@
+"use client"
+
 import * as yup from "yup"
 import { useFormik } from 'formik';
 import authApi from "../api/AuthApi"
@@ -7,6 +9,7 @@ import Button from "./Button"
 import GitHubIcon from '@mui/icons-material/GitHub';
 import GoogleIcon from '@mui/icons-material/Google';
 import toast from "react-hot-toast";
+import Link from "next/link";
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const signupSchema = yup.object({
     name: yup
@@ -112,11 +115,13 @@ const Singup = ({ setRoute }: { setRoute: (val: string) => void }) => {
                 disabled={formik.isSubmitting}
 
             />
-
             <div className=" flex flex-col mt-2">
                 <div className="font-bold">Or Join with</div>
                 <div className="flex justify-center gap-1 mt-3">
+                <Link href={`${process.env.NEXT_PUBLIC_GITHUB_URI}`} >
+                    
                     <GitHubIcon />
+                    </Link>
                     <GoogleIcon />
                 </div>
             </div>

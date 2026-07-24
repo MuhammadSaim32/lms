@@ -3,6 +3,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_SERVER_URI || "http://localhost:8000/ap
 export const routes = {
   // User routes
   register: `${BASE_URL}/register`,
+  registerGithub: `${BASE_URL}/register/github`,
   activateUser: `${BASE_URL}/activate-user`,
   login: `${BASE_URL}/login`,
   logout: `${BASE_URL}/logout`,

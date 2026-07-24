@@ -330,3 +330,72 @@ export const deleteUser = catchAsync(async (req: Request, res: Response) => {
     })
 
 })
+
+
+export const githubAuth = catchAsync(async (req: Request, res: Response) => {
+    const { code } = req.body;
+
+    if (code == undefined) {
+        throw new ErrorHandler("Code is required", 400)
+    }
+
+    const tokenResponse = await fetch(process.env.GITHUB_CODE_EXCHANGE_URI, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        },
+        body: JSON.stringify({
+            client_id: process.env.GITHUB_CLIENT_ID,
+            client_secret: process.env.GITHUB_SECRET,
+            code: code
+        })
+    })
+
+    const tokenData = await tokenResponse.json();
+    if (tokenData.error) {
+        throw new ErrorHandler(tokenData.error_description || "GitHub auth failed", 400)
+    }
+
+    const userEmail = await fetch(process.env.GITHUB_USER_INFO_URI + "/emails", {
+        headers: {
+            "Authorization": `token ${tokenData.access_token}`,
+            "Accept": "application/json"
+        }
+    })
+
+    const EmailData = await userEmail.json();
+    const primaryEmail = EmailData.find((e) => e.primary && e.verified);
+
+    if (!primaryEmail) {
+        throw new ErrorHandler("GitHub auth failed", 400)
+    }
+
+    const email = primaryEmail?.email;
+
+    const user = await User.findOne({ email });
+
+    if (user && user.provider !== "github") {
+        throw new ErrorHandler(`User with that Email already exists`, 400)
+    }
+
+    const userData = await fetch(process.env.GITHUB_USER_INFO_URI, {
+        headers: {
+            "Authorization": `token ${tokenData.access_token}`,
+            "Accept": "application/json"
+        }
+    })
+
+    const userInfo = await userData.json();
+
+    const name = userInfo.name || userInfo.login;
+    const image = userInfo.avatar_url;
+    if (!user) {
+
+        const newUser = await User.create({ name, email, avatar: { public_id: "", url: image }, provider: "github" });
+        return sendTokens(newUser, 200, res);
+    }
+
+   const updatedData = await User.findOneAndUpdate({ email }, { name, avatar: { public_id: "", url: image } }, { new: true })
+    sendTokens(updatedData, 200, res);
+})

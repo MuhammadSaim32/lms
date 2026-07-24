@@ -14,6 +14,7 @@ export interface IUser extends Document {
     role: string;
     isVerified: boolean;
     otp: string
+    provider: string
     course: Array<{ courseId: string }>
     comparePassword: (password: string) => Promise<boolean>;
     giveAccessToken: () => string;
@@ -54,6 +55,10 @@ const userSchema: Schema<IUser> = new mongoose.Schema({
     isVerified: {
         type: Boolean,
         default: false
+    },
+    provider:{
+        type: String,
+        default: "local"
     },
     otp: String,
     course: [{ courseId: String }]
