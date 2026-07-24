@@ -392,7 +392,7 @@ export const githubAuth = catchAsync(async (req: Request, res: Response) => {
     const image = userInfo.avatar_url;
     if (!user) {
 
-        const newUser = await User.create({ name, email, avatar: { public_id: "", url: image }, provider: "github" });
+        const newUser = await User.create({ name, email, avatar: { public_id: "", url: image }, provider: "github", isVerified: true });
         return sendTokens(newUser, 200, res);
     }
 
