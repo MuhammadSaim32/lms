@@ -1,5 +1,7 @@
 import dotenv from 'dotenv';
-dotenv.config()
+dotenv.config({
+ path: `.env.${process.env.NODE_ENV}`,
+})
 import { httpServer as app } from './app.js';
 import connectDB from './utils/db.js';
 import seedTestUser from './utils/seedUser.js';
