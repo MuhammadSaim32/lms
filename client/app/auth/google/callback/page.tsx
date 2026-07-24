@@ -1,12 +1,12 @@
 "use client"
 
-import { useEffect, useState } from "react";
+import { useEffect, useState ,Suspense} from "react";
 import authApi from "../../../../api/AuthApi";
 import { route } from "../../../../routes";
 import toast from "react-hot-toast";
 import { useSearchParams, useRouter } from 'next/navigation';
 
-export default function GoogleAuth() {
+ function GoogleAuthContent() {
     const [loading, setLoading] = useState(true);
     const searchParams = useSearchParams();
     const router = useRouter();
@@ -51,4 +51,14 @@ export default function GoogleAuth() {
             {code && loading ? "Logging you in, please wait..." : ""}
         </div>
     </div>;
+}
+
+export default function GoogleAuth() {
+    return (
+        <div className="h-screen w-screen bg-slate-900 flex justify-center items-center">
+            <Suspense fallback={<div className="text-white text-2xl">Loading...</div>}>
+                <GoogleAuthContent />
+            </Suspense>
+        </div>
+    );
 }
