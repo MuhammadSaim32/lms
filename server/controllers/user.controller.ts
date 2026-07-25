@@ -101,6 +101,9 @@ export const loginUser = catchAsync(async (req: Request, res: Response, next: Ne
     if (!user) {
         throw new ErrorHandler("Invalid email or password", 401);
     }
+      if(user.provider !== "local") {
+        throw new ErrorHandler(`Please login using ${user.provider}`, 400);
+    }
     const isPasswordMatched = await user.comparePassword(password);
     if (!isPasswordMatched) {
         throw new ErrorHandler("Invalid email or password", 401);
