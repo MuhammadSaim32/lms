@@ -101,7 +101,7 @@ export const loginUser = catchAsync(async (req: Request, res: Response, next: Ne
     if (!user) {
         throw new ErrorHandler("Invalid email or password", 401);
     }
-      if(user.provider !== "local") {
+    if (user.provider !== "local") {
         throw new ErrorHandler(`Please login using ${user.provider}`, 400);
     }
     const isPasswordMatched = await user.comparePassword(password);
@@ -379,6 +379,9 @@ export const githubAuth = catchAsync(async (req: Request, res: Response) => {
     const user = await User.findOne({ email });
 
     if (user && user.provider !== "github") {
+        if (user.provider === "google") {
+            throw new ErrorHandler(`Please login using Google`, 400)
+        }
         throw new ErrorHandler(`User with that Email already exists`, 400)
     }
 
@@ -441,13 +444,16 @@ export const googleAuth = catchAsync(async (req: Request, res: Response) => {
         throw new ErrorHandler("Google auth failed Email is not verified", 400)
     }
 
-    const name = userInfo.name 
+    const name = userInfo.name
     const email = userInfo.email;
     const image = userInfo.picture;
 
     const user = await User.findOne({ email });
 
     if (user && user.provider !== "google") {
+        if(user.provider === "github") {
+            throw new ErrorHandler(`Please login using GitHub`, 400)
+        }
         throw new ErrorHandler(`User with that Email already exists`, 400)
     }
 
