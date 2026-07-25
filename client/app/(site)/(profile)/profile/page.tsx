@@ -77,14 +77,14 @@ export default function Account() {
           {...formik.getFieldProps("emailAddress")}
         />
       </div>
-
-      <Button
-        text={`${formik.isSubmitting ? "updating..." : "Update"}`}
-        type="submit"
-        disabled={!formik.dirty || formik.isSubmitting}
-        className="bg-blue-600  text-white py-2 px-4 rounded-md disabled:opacity-50"
-      />
-
+      {userdata?.userData?.provider == "local" &&
+        <Button
+          text={`${formik.isSubmitting ? "updating..." : "Update"}`}
+          type="submit"
+          disabled={!formik.dirty || formik.isSubmitting}
+          className="bg-blue-600  text-white py-2 px-4 rounded-md disabled:opacity-50"
+        />
+      }
     </form>
   );
 }

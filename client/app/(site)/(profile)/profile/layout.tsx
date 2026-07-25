@@ -10,7 +10,7 @@ import toast from "react-hot-toast";
 import authApi from "../../../../api/AuthApi";
 import routes from "../../../../routes";
 const sideBar = [
-  { name: "Change Password", url: "change" },
+  { name: "Change Password", url: "change", provider: "local" },
   { name: "Enrolled Courses", url: "enrolled" },
 ];
 
@@ -57,6 +57,7 @@ export default function RootLayout({
           </Link>
           {sideBar.map((item) => {
             return (
+              userData.userData.provider == "local" &&
               <Link
                 href={`/profile/${item.url}`}
                 key={item.name}
