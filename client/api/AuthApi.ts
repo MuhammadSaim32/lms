@@ -212,6 +212,19 @@ class AuthApi {
 
         return data;
     }
+
+    async getUsersAnalytics(url: string) {
+        const res = await fetch(url, {
+            method: "GET",
+            credentials: "include",
+        });
+
+        if (!res.ok) {
+            throw new Error("Failed to fetch users analytics");
+        }
+
+        return res.json();
+    }
 }
 
 const authApi = new AuthApi();

@@ -42,6 +42,9 @@ export const routes = {
   // Layout routes
   createLayout: `${BASE_URL}/create-layout`,
   getLayout: (type: string) => `${BASE_URL}/get-layout?type=${type}`,
+
+  // Analytics routes
+  getUsersAnalytics: `${BASE_URL}/users-analytics`,
 } as const;
 
 export const route = routes;

@@ -1,41 +1,35 @@
 "use client"
+import { useEffect, useState } from 'react';
 import { BarChart, Bar, Tooltip, YAxis, XAxis, LabelList } from 'recharts';
+import authApi from '../../../api/AuthApi';
+import routes from '../../../routes';
 
 export default function CourseAnalytics() {
+    const [data, setData] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+console.log("here is data",data)
+    useEffect(() => {
+        const fetchAnalytics = async () => {
+            try {
+                const response = await authApi.getUsersAnalytics(routes.getUsersAnalytics);
+                console.log("response",response)
+                setData(response.months || response || []);
+            } catch (err) {
+                console.error("Failed to fetch analytics", err);
+            } finally {
+                setLoading(false);
+            }
+        };
 
-    const data = [
-        {
-            name: 'Page A',
-            uv: 1,
+        fetchAnalytics();
+    }, []);
 
-        },
-        {
-            name: 'Page B',
-            uv: 6,
-        },
-        {
-            name: 'Page C',
-            uv: 6
-        },
-        {
-            name: 'Page D',
-            uv: 1,
-        },
-        {
-            name: 'Page E',
-            uv: 5,
+    if (loading) {
+        return <div className='flex w-full justify-center items-center h-screen'>
+            <div className='text-xl text-gray-400'>Loading analytics...</div>
+        </div>;
+    }
 
-        },
-        {
-            name: 'Page F',
-            uv: 3,
-
-        },
-        {
-            name: 'Page G',
-            uv: 2
-        },
-    ];
     return <div className='flex   w-full justify-center items-center'>
         <BarChart
             style={{
@@ -56,9 +50,9 @@ export default function CourseAnalytics() {
             />
 
 
-            <Bar dataKey="uv" fill="#8884d8">
+            <Bar dataKey="count" fill="#8884d8">
                 <LabelList
-                    dataKey="uv"
+                    dataKey="count"
                     position="top"        /* Places text directly above the bar */
                     offset={5}           /* Adds 5px space between bar top and text */
                     fill="#333"          /* Text color */
