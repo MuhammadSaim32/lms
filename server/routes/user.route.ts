@@ -1,5 +1,5 @@
 import express from "express"
-import { googleAuth, deleteUser, updateRole, getAllUsers, registerUser, activateUser, loginUser, logoutUser, updateRefreshToken, getUserProfile, socailLogin, updateUserProfile, updatePassword, updateAvatar, githubAuth } from "../controllers/user.controller.js"
+import { getUsersAnalytics,googleAuth, deleteUser, updateRole, getAllUsers, registerUser, activateUser, loginUser, logoutUser, updateRefreshToken, getUserProfile, socailLogin, updateUserProfile, updatePassword, updateAvatar, githubAuth } from "../controllers/user.controller.js"
 import { AuthMiddleware } from "../middleware/auth.js"
 const UserRouter = express.Router()
 UserRouter.use(express.json({ limit: "50mb" }))
@@ -20,4 +20,5 @@ UserRouter.put("/update-avatar", AuthMiddleware, updateAvatar)
 UserRouter.get("/get-all-users", AuthMiddleware, getAllUsers)
 UserRouter.put("/update-role", AuthMiddleware, updateRole)
 UserRouter.delete("/delete-user/:id", AuthMiddleware, deleteUser)
+UserRouter.get("/users-analytics", getUsersAnalytics)
 export default UserRouter

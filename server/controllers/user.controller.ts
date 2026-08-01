@@ -451,7 +451,7 @@ export const googleAuth = catchAsync(async (req: Request, res: Response) => {
     const user = await User.findOne({ email });
 
     if (user && user.provider !== "google") {
-        if(user.provider === "github") {
+        if (user.provider === "github") {
             throw new ErrorHandler(`Please login using GitHub`, 400)
         }
         throw new ErrorHandler(`User with that Email already exists`, 400)
@@ -466,5 +466,32 @@ export const googleAuth = catchAsync(async (req: Request, res: Response) => {
     const updatedData = await User.findOneAndUpdate({ email }, { name, avatar: { public_id: "", url: image } }, { new: true })
     sendTokens(updatedData, 200, res);
 
+
+})
+
+
+
+export const getUsersAnalytics = catchAsync(async (req: Request, res: Response) => {
+
+    const data = await User.aggregate([
+        {
+            $group: {
+                _id: { $month: "$createdAt" },
+                totalCount: { $sum: 1 }
+            }
+        }
+    ])
+
+    const months=[{name: "January",count: 0}, {name: "February", count: 0}, {name: "March", count: 0}, {name: "April", count: 0}, {name: "May", count: 0}, {name: "June", count: 0}, {name: "July", count: 0}, {name: "August", count: 0}, {name: "September", count: 0}, {name: "October", count: 0}, {name: "November", count: 0}, {name: "December", count: 0}]
+   const analyticsdata = data.map((item) => {
+        const monthIndex = item._id - 1;
+        months[monthIndex].count = item.totalCount;
+    })
+
+    console.log("here is any",months)
+    res.status(200).json({
+        success: true,
+        months
+    })
 
 })
