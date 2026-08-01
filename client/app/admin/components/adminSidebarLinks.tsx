@@ -73,17 +73,12 @@ export const sideBaritems = [
     title: "Analytics",
     children: [
       {
-        url: "/admin/course-analytics",
-        name: "Course AnaLytics",
-        icon: "BarChartIcon",
-      },
-      {
         url: "/admin/user-analytics",
         name: "Users AnaLytics",
         icon: "BarChartIcon",
       },
       {
-        url: "/admin/user-analytics",
+        url: "/admin/order-analytics",
         name: "Orders AnaLytics",
         icon: "BarChartIcon",
       },

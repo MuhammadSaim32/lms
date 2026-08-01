@@ -151,3 +151,27 @@ export const handleStripeWebhook = catchAsync(async (req, res) => {
 
     res.status(200).end();
 });
+
+export const getOrdersAnalytics = catchAsync(async (req: Request, res: Response) => {
+
+    const data = await Order.aggregate([
+        {
+            $group: {
+                _id: { $month: "$createdAt" },
+                totalCount: { $sum: 1 }
+            }
+        }
+    ])
+
+    const months = [{ name: "January", count: 0 }, { name: "February", count: 0 }, { name: "March", count: 0 }, { name: "April", count: 0 }, { name: "May", count: 0 }, { name: "June", count: 0 }, { name: "July", count: 0 }, { name: "August", count: 0 }, { name: "September", count: 0 }, { name: "October", count: 0 }, { name: "November", count: 0 }, { name: "December", count: 0 }]
+    data.forEach((item) => {
+        const monthIndex = item._id - 1;
+        months[monthIndex].count = item.totalCount;
+    })
+
+    res.status(200).json({
+        success: true,
+        months
+    })
+
+})

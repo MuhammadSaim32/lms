@@ -45,6 +45,7 @@ export const routes = {
 
   // Analytics routes
   getUsersAnalytics: `${BASE_URL}/users-analytics`,
+  getOrdersAnalytics: `${BASE_URL}/orders-analytics`,
 } as const;
 
 export const route = routes;
