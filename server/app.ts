@@ -14,7 +14,7 @@ const app = express();
 export const httpServer = createServer(app)
 const io = new Server(httpServer, {
     cors: {
-        origin: ["http://localhost:3000"],
+        origin: process.env.ORIGIN,
         credentials: true
     }
 });
@@ -22,7 +22,7 @@ const io = new Server(httpServer, {
 
 
 app.use(cors({
-    origin: ["http://localhost:3000"],
+    origin: process.env.ORIGIN,
     credentials: true
 }))
 
