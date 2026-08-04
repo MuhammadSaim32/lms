@@ -142,11 +142,40 @@ export const handleStripeWebhook = catchAsync(async (req, res) => {
         const courseId = session.metadata.courseId;
         console.log(`Checkout session completed for user ${userId} and order ${courseId}`);
         const findUser = await User.findById(userId);
-        if (findUser) {
+        const isCourse = await Course.findById(courseId);
+        if (findUser && isCourse) {
             findUser.course.push({ courseId: courseId });
             await findUser.save();
-        }
 
+
+
+
+            const order = await Order.create({
+                courseId,
+                userId: userId,
+            });
+            const io = req.app.get('io');
+
+            const pathToFile = path.join(import.meta.dirname, "../mails/order.ejs")
+            const data = { order: { userName: findUser.name, courseName: isCourse.name, price: isCourse.price } }
+            const html = await ejs.renderFile(pathToFile, data)
+            await sendEmail({ html, subject: "Order Confirmation", UserEmail: findUser.email })
+
+
+
+            const notification = new Notification({
+                userId: userId,
+                title: "New Order",
+                message: `You have new orderd from ${isCourse.name} course`,
+                status: "unread",
+            })
+            const saved = await notification.save()
+            io.emit("notification", saved);
+
+            isCourse.purchased! += 1
+            await isCourse.save()
+
+        }
     }
 
     res.status(200).end();

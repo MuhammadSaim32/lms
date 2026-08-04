@@ -4,6 +4,7 @@ import Protected from "../../components/Protected";
 import "../globals.css"
 import AuthProvider from "../../context/AuthContext";
 import { Toaster } from "react-hot-toast";
+import AdminHeader from "./components/AdminHeader";
 export default function RootLayout({
     children,
 }: Readonly<{
@@ -16,7 +17,12 @@ export default function RootLayout({
                 <AuthProvider>
                     <Protected>
                         <AdminSideBar />
+                        <div className="w-full flex  flex-col justify-between gap-2">
+                        <AdminHeader/>
+                        <div className="flex-1 ">
                         {children}
+                        </div>
+                        </div>
                         <Toaster
                             toastOptions={{
                                 position: 'top-right',

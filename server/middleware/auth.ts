@@ -3,6 +3,7 @@ import ErrorHandler from "../utils/ErrorHandler.js";
 import jwt, { type JwtPayload, type Secret } from "jsonwebtoken";
 import { redis } from "../utils/redis.js"
 import catchAsync from "./catchAsync.js";
+import userModel from "../models/user.models.js";
 
 export const AuthMiddleware = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
 
@@ -17,12 +18,15 @@ export const AuthMiddleware = catchAsync(async (req: Request, res: Response, nex
     if (!user) {
         throw new ErrorHandler("Access Token  is inavlid", 401)
     }
-    const userData = await redis.get(user.id)
+    // const userData = await redis.get(user.id)
+    const userData = await userModel.findById(user.id)
+
     if (!userData) {
         throw new ErrorHandler("user not found", 401)
     }
 
-    req.user = JSON.parse(userData).user
+    // req.user = JSON.parse(userData).user
+    req.user = userData
 
     next()
 
