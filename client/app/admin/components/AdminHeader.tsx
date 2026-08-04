@@ -14,7 +14,7 @@ export default function AdminHeader() {
   const [noData, SetnoData] = useState<any[]>([]);
 
   useEffect(() => {
-    const socketInstance = io(process.env.NEXT_PUBLIC_SERVER_URI);
+    const socketInstance = io(process.env.NEXT_PUBLIC_SOCKET_URI);
     setSocket(socketInstance);
 
     socketInstance.on("notification", (data) => {
