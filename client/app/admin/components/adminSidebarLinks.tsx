@@ -17,11 +17,11 @@ export const sideBaritems = [
         name: "users",
         icon: "GroupIcon",
       },
-      {
-        url: "/admin",
-        name: "incoices",
-        icon: "ReceiptIcon",
-      },
+      // {
+      //   url: "/admin",
+      //   name: "incoices",
+      //   icon: "ReceiptIcon",
+      // },
     ],
   },
   {
