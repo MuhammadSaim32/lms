@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Area, AreaChart, XAxis, YAxis, Tooltip } from "recharts";
 import orderApi from "../../../api/OrderApi";
 import routes from "../../../routes";
+import Loading from "../../../components/Loading";
 
 const TinyAreaChart = () => {
   const [chartData, setChartData] = useState<any[]>([]);
@@ -33,11 +34,7 @@ const TinyAreaChart = () => {
   }, []);
 
   if (loading) {
-    return (
-      <div className="flex w-full justify-center items-center h-72">
-        <div className="text-xl text-gray-500">Loading order analytics...</div>
-      </div>
-    );
+    return <Loading size={60} />;
   }
 
   return (

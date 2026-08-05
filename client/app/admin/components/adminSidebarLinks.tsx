@@ -52,23 +52,23 @@ export const sideBaritems = [
         name: "Faq",
         icon: "QuizIcon",
       },
-      {
-        url: "/admin",
-        name: "Categories",
-        icon: "CategoryIcon",
-      },
+      // {
+      //   url: "/admin",
+      //   name: "Categories",
+      //   icon: "CategoryIcon",
+      // },
     ],
   },
-  {
-    title: "Controllers",
-    children: [
-      {
-        url: "/admin",
-        name: "MessageTeam",
-        icon: "ChatIcon",
-      },
-    ],
-  },
+  // {
+  //   title: "Controllers",
+  //   children: [
+  //     {
+  //       url: "/admin",
+  //       name: "MessageTeam",
+  //       icon: "ChatIcon",
+  //     },
+  //   ],
+  // },
   {
     title: "Analytics",
     children: [

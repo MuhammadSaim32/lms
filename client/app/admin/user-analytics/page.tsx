@@ -3,11 +3,12 @@ import { useEffect, useState } from 'react';
 import { BarChart, Bar, Tooltip, YAxis, XAxis, LabelList } from 'recharts';
 import authApi from '../../../api/AuthApi';
 import routes from '../../../routes';
+import Loading from '../../../components/Loading';
 
 export default function CourseAnalytics() {
     const [data, setData] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
-console.log("here is data",data)
+
     useEffect(() => {
         const fetchAnalytics = async () => {
             try {
@@ -25,9 +26,7 @@ console.log("here is data",data)
     }, []);
 
     if (loading) {
-        return <div className='flex w-full justify-center items-center h-screen'>
-            <div className='text-xl text-gray-400'>Loading analytics...</div>
-        </div>;
+        return <Loading size={60} />;
     }
 
     return <div className='flex   w-full justify-center items-center'>

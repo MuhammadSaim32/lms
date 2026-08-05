@@ -8,9 +8,12 @@ import routes from "../../../routes";
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import * as yup from "yup"
+import toast from "react-hot-toast";
 import Button from "../../../components/Button";
+import Loading from "../../../components/Loading";
 
 export default function Faq() {
+    const [pageLoading, setPageLoading] = useState(true);
 
     const faqObject = yup.object({
         question: yup.string().required("Questoin is Rquiredd").min(10, "min Question length is 10").max(100, "max question lenght is 45"),
@@ -37,11 +40,16 @@ export default function Faq() {
                 }
             } catch (error) {
                 console.error("Failed to fetch FAQ:", error);
+            } finally {
+                setPageLoading(false);
             }
         };
         fetchFaq();
     }, []);
 
+    if (pageLoading) {
+        return <Loading size={60} />;
+    }
 
     return <div className="h-full w-full min-h-screen text-center"  >
         <Formik
@@ -49,15 +57,15 @@ export default function Faq() {
             enableReinitialize={true}
             validationSchema={FaqScheama}
             onSubmit={async (values) => {
-                console.log("asdfsaf", values)
-
                 try {
-                    await layoutApi.createLayout(routes.createLayout, {
+                    const res = await layoutApi.createLayout(routes.createLayout, {
                         type: "FAQ",
                         faq: values.faq
                     });
-                } catch (error) {
+                    toast.success(res?.message || "FAQ layout updated successfully");
+                } catch (error: any) {
                     console.error("Failed to update FAQ:", error);
+                    toast.error(error?.message || "Failed to update FAQ layout");
                 }
             }}
         >
@@ -151,9 +159,12 @@ export default function Faq() {
                             </div>
                         )}
                     </FieldArray>
-                    <button
+                    <Button
                         type="submit"
-                    >submit</button>
+                        text={isSubmitting ? "Submitting..." : "Submit"}
+                        disabled={isSubmitting || !dirty}
+                        className={`mt-6 ${isSubmitting || !dirty ? "opacity-50 cursor-not-allowed" : "cursor-pointer bg-blue-500 hover:bg-blue-700"}`}
+                    />
                 </Form>
 
 
