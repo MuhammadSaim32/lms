@@ -1,12 +1,15 @@
 "use client";
 import { useEffect, useState } from "react";
+import DeleteIcon from '@mui/icons-material/Delete';
 import authApi from "../../../api/AuthApi";
 import routes from "../../../routes";
+import toast from "react-hot-toast";
 import Loading from "../../../components/Loading";
 
 export default function Users() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [deletingUserId, setDeletingUserId] = useState<string | null>(null);
   const Items = [
     "ID",
     "name",
@@ -29,10 +32,16 @@ export default function Users() {
   };
 
   const handleDeleteUser = async (id: string) => {
+    setDeletingUserId(id);
     try {
-      await authApi.deleteUser(routes.deleteUser(id));
-    } catch (error) {
+      const response = await authApi.deleteUser(routes.deleteUser(id));
+      toast.success(response?.message || "User deleted successfully");
+      await fetchAllUsers();
+    } catch (error: any) {
       console.error("Failed to delete user", error);
+      toast.error(error?.message || "Failed to delete user");
+    } finally {
+      setDeletingUserId(null);
     }
   };
 
@@ -66,12 +75,16 @@ export default function Users() {
                 <td className="w-1/6 truncate px-4 py-2">{val.course.length}</td>
                 <td className="w-1/6 truncate px-4 py-2">
                   <button
-                    className="cursor-pointer"
-                    onClick={() => {
-                      handleDeleteUser(val._id);
-                    }}
+                    className={`rounded-full p-1 cursor-pointer ${deletingUserId === val._id ? "opacity-50 cursor-not-allowed" : "hover:bg-red-600 hover:text-white"}`}
+                    onClick={() => handleDeleteUser(val._id)}
+                    disabled={deletingUserId === val._id}
+                    aria-label="Delete user"
                   >
-                    Delete
+                    {deletingUserId === val._id ? (
+                      <span className="text-sm">Deleting...</span>
+                    ) : (
+                      <DeleteIcon fontSize="small" />
+                    )}
                   </button>
                 </td>
               </tr>
