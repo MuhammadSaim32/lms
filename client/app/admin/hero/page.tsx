@@ -6,12 +6,10 @@ import routes from "../../../routes";
 import toast from "react-hot-toast"
 import Button from "../../../components/Button"
 import CameraAltRoundedIcon from '@mui/icons-material/CameraAltRounded';
-import IconButton from '@mui/material/IconButton';
 
 import { useRef } from "react";
 export default function Hero() {
     const [fileUrl, setFileUrl] = useState<string | null>(null);
-    const [fileType, setFileType] = useState("");
     const fileInputRef = useRef(null);
     const [initialValues, setInitialValues] = useState({
         file: null,
@@ -63,12 +61,22 @@ export default function Hero() {
                     const data = await layoutApi.createLayout(routes.createLayout, payload);
                     toast.success(data.message);
 
+                    const returnedUrl = data.data.LayoutDb?.banner?.image?.url;
+                    const newInitial = {
+                        file: null,
+                        title: payload.title ?? initialValues.title,
+                        subTitle: payload.subTitle ?? initialValues.subTitle,
+                        imageUrl: returnedUrl,
+                    };
+
+                    setInitialValues && setInitialValues(newInitial);
+                    setFileUrl(returnedUrl || null);
                 } catch (err) {
                     toast.error(err.message);
                 }
             }}
         >
-            {({ setFieldValue, dirty, getFieldProps, isSubmitting }) => (
+            {({ setFieldValue, dirty, getFieldProps, isSubmitting, values }) => (
                 <Form className="h-screen w-screen bg-slate-900 mt-2 flex justify-around text-white">
 
                     <div className="flex justify-center flex-col ">
@@ -81,8 +89,10 @@ export default function Hero() {
                                     alt="Preview"
                                 />
                                 <button
+                                    type="button"
                                     className="absolute bottom-16 right-12"
                                     onClick={openFilePicker}
+                                    aria-label="Open file picker"
 
                                 ><CameraAltRoundedIcon /></button>
                             </div>
@@ -94,7 +104,8 @@ export default function Hero() {
                             ref={fileInputRef}
                             accept="image/*,video/*,audio/*"
                             className="bg-red-600 rounded-full  w-5 h-5 hidden"
-                            placeholder="chose file"
+                            placeholder="Choose pic"
+                            aria-label="Choose pic"
 
                             onChange={(e) => {
                                 const selectedFile = e.target.files[0];
@@ -104,7 +115,6 @@ export default function Hero() {
 
                                 const generatedUrl = URL.createObjectURL(selectedFile);
                                 setFileUrl(generatedUrl);
-                                setFileType(selectedFile.type);
                             }}
                         />
 
@@ -133,7 +143,9 @@ export default function Hero() {
 
 
 
-                        {dirty && <p className="text-red-500 text-xl">You have an unsaved file selected.</p>}
+                        {(values.file || (fileUrl && fileUrl !== initialValues.imageUrl)) && (
+                            <p className="text-red-500 text-xl">You have an unsaved file selected.</p>
+                        )}
                     </div>
 
 
