@@ -398,7 +398,6 @@ export const getUsersAnalytics = catchAsync(async (req: Request, res: Response) 
         months[monthIndex].count = item.totalCount;
     })
 
-    console.log("here is any", months)
     res.status(200).json({
         success: true,
         months
