@@ -6,6 +6,7 @@ import routes from "../../../routes";
 import toast from "react-hot-toast";
 import Button from "../../../components/Button";
 import CameraAltRoundedIcon from "@mui/icons-material/CameraAltRounded";
+import Loading from "../../../components/Loading";
 
 import { useRef } from "react";
 export default function Hero() {
@@ -17,6 +18,7 @@ export default function Hero() {
     subTitle: "",
     imageUrl: "",
   });
+  const [loading, setLoading] = useState(true);
 
   const openFilePicker = () => {
     fileInputRef.current.click();
@@ -37,8 +39,13 @@ export default function Hero() {
           if (image?.url) setFileUrl(image.url);
         }
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }, []);
+
+  if (loading) {
+    return <Loading size={40} />;
+  }
 
   return (
     <Formik

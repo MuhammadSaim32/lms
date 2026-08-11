@@ -7,7 +7,7 @@ export default (err: any, req: Request, res: Response, next: NextFunction) => {
     err.statusCode = err.statusCode || 500;
     err.message = err.message || "Internal server error";
 
-
+    console.log(err)
     if (err.name == "CastError") {
 
         const message = `Resourec not found`;

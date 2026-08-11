@@ -2,12 +2,13 @@ import { useState, useEffect, useRef } from "react";
 import { useFormik } from "formik";
 import Button from "@/components/Button";
 import * as yup from "yup";
-export default function courseInfo({
+export default function CourseInfo({
   setcourseData,
   setStep,
   initialValues,
 }: any) {
   const [fileUrl, setFileUrl] = useState<string | null>(null);
+  const [isNewPic, setIsNewPic] = useState(false);
   const fileRef = useRef(null);
 
   const courseInfoSchema = yup.object({
@@ -35,6 +36,7 @@ export default function courseInfo({
       typeof initialValues.pic === "string"
     ) {
       setFileUrl(initialValues.pic);
+      setIsNewPic(false);
     }
   }, [initialValues]);
 
@@ -62,6 +64,8 @@ export default function courseInfo({
 
         values.pic = base64;
       }
+
+      values.picIsNew = isNewPic;
 
       console.log("values in teh course data ", values);
       setcourseData((prev: any) => ({ ...prev, courseInfo: values }));
@@ -196,6 +200,7 @@ export default function courseInfo({
               formik.setFieldError("pic", "Only image files are allowed");
               return;
             }
+            setIsNewPic(true);
             formik.setFieldValue("pic", file);
             const generatedUrl = URL.createObjectURL(file);
             setFileUrl(generatedUrl);

@@ -99,11 +99,10 @@ export default function EditCourse() {
     const content = updatedData.courseContent as any;
     console.log("info in teh apge", info);
     // Reshape to match backend Mongoose schema exactly
-    const payload = {
+    const payload: any = {
       name: info.courseName,
       price: Number(info.coursePrice),
       estimatedPrice: Number(info.estimatedPrice) || 0,
-      ...(info.pic && { pic: info.pic }),
       tags: info.courseTags
         ? info.courseTags.split(",").map((t: string) => t.trim())
         : [],
@@ -125,6 +124,10 @@ export default function EditCourse() {
         })),
       })),
     };
+
+    if (info.picIsNew && info.pic) {
+      payload.pic = info.pic;
+    }
 
     console.log("Updating course payload:", payload);
 

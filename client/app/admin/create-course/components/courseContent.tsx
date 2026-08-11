@@ -21,7 +21,13 @@ export default function CourseContent({
             .of(
               yup.object({
                 Videotitle: yup.string().required("Video title is required"),
-                Videourl: yup.string().url("Video URL must be a valid URL"),
+                Videourl: yup
+                  .string()
+                  .matches(
+                    /^[A-Za-z0-9_-]{11}$/,
+                    "Video ID must be a valid 11-character YouTube ID",
+                  )
+                  .required("Video ID is required"),
                 Videodescription: yup
                   .string()
                   .required("Description is required"),

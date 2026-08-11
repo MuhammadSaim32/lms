@@ -54,7 +54,7 @@ export default function CourseDetail() {
         <iframe
           width="560"
           height="315"
-          src={`${course?.demoUrl}`}
+          src={`https://www.youtube.com/embed/${course?.videoUrl}`}
           title="YouTube video player"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         ></iframe>
