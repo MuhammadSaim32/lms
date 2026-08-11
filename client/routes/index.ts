@@ -30,7 +30,7 @@ export const routes = {
   addReplyToReview: `${BASE_URL}/add-reply-to-review`,
   getAllCoursesForAdmin: `${BASE_URL}/get-all-courses-for-admin`,
   deleteCourse: (id: string) => `${BASE_URL}/delete-course/${id}`,
-
+  getCourseNoAuth: (id: string) => `${BASE_URL}/get-course-no-auth/${id}`,
   // Order routes
   createOrder: `${BASE_URL}/create-order`,
   createSession: (id: string) => `${BASE_URL}/createSession/${id}`,

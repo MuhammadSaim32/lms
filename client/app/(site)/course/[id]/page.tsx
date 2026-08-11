@@ -14,7 +14,9 @@ export default function CourseDetail() {
       const id = params?.id as string;
       if (id) {
         try {
-          const response = await courseApi.getCourses(routes.getCourse(id));
+          const response = await courseApi.getCourses(
+            routes.getCourseNoAuth(id),
+          );
           setCourse(response.data?.course || null);
         } catch (error) {
           console.error("Failed to fetch course details:", error);
