@@ -62,33 +62,35 @@ export const updateCourse = catchAsync(async (req: Request, res: Response, next:
 export const getSingleCourse = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const courseId = req.params.id as string;
     if (!courseId) {
-
         throw new ErrorHandler("Course Id is required", 400);
     }
 
-    const isCache = false
-    if (isCache) {
-
-        res.status(200).json({
-            success: true,
-            message: "Course Fetched Successfully",
-            data: {
-                course: JSON.parse(isCache)
-            }
-        })
-
-
-
-    }
     const course = await CourseModel.findById(courseId)
 
+    if (!course) {
+        throw new ErrorHandler("Course not found", 404);
+    }
 
+    let courseToReturn = course;
+
+    if (!req.user || req.user.role !== "admin") {
+        courseToReturn = {
+            name: course.name,
+            description: course.description,
+            price: course.price,
+            demoUrl: course.demoUrl,
+            benefits: course.benefits,
+            prerequisites: course.prerequisites,
+            rating: course.rating,
+            thumbnail: course.thumbnail
+        } as any;
+    }
 
     res.status(200).json({
         success: true,
         message: "Course Fetched Successfully",
         data: {
-            course
+            course: courseToReturn
         }
     })
 
@@ -100,12 +102,14 @@ export const getAllCourses = catchAsync(async (req: Request, res: Response, next
 
 
 
-    const courses = await CourseModel.find().select("-courseData.videoPlayer -courseData.videoUrl -courseData.videoSection -courseData.Links -courseData.questions -courseData.suggestions");
+    const courses = await CourseModel.find().select("name price thumbnail");
+
+
     res.status(200).json({
         success: true,
         message: "Courses Fetched Successfully",
         data: {
-            courses
+            courses: courses
         }
     })
 
@@ -113,40 +117,6 @@ export const getAllCourses = catchAsync(async (req: Request, res: Response, next
 
 
 
-export const getCoureseByUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const userId = req.user?._id;
-    if (!userId) {
-        throw new ErrorHandler("User Id is required", 400);
-    }
-
-    const courseId = req.params.id as string;
-
-    if (!courseId) {
-        throw new ErrorHandler("Course Id is required", 400);
-    }
-
-
-    if (!req.user) {
-        throw new ErrorHandler("User not found", 400);
-    }
-    const isUserEnrolled = req.user.course.find((item: any) => item.courseId === courseId)
-
-
-    if (!isUserEnrolled) {
-        throw new ErrorHandler("You are not enrolled in this course", 400);
-    }
-    const course = await CourseModel.findById(courseId);
-
-
-
-    res.status(200).json({
-        success: true,
-        message: "Course Fetched Successfully",
-        data: {
-            course
-        }
-    })
-})
 
 
 export const addQuestion = catchAsync(async (req: Request, res: Response, next: NextFunction) => {

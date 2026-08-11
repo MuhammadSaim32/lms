@@ -1,12 +1,12 @@
 import express from "express"
-import { AuthMiddleware } from "../middleware/auth.js"
+import { AuthMiddleware, RoleMiddleware } from "../middleware/auth.js"
 import { getAllNotification, updateNotificationStatus } from "../controllers/notification.controller.js"
 const NotificationRouter = express.Router()
 
 NotificationRouter.use(express.json({ limit: "50mb" }))
 
-NotificationRouter.get("/get-all-notification", AuthMiddleware, getAllNotification)
-NotificationRouter.put("/update-notification-status/:id", AuthMiddleware, updateNotificationStatus)
+NotificationRouter.get("/get-all-notification", AuthMiddleware, RoleMiddleware("admin"), getAllNotification)
+NotificationRouter.put("/update-notification-status/:id", AuthMiddleware, RoleMiddleware("admin"), updateNotificationStatus)
 
 
 export default NotificationRouter

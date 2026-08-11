@@ -30,3 +30,17 @@ export const AuthMiddleware = catchAsync(async (req: Request, res: Response, nex
 
 
 })
+
+export const RoleMiddleware = (role: string) => {
+    return (req: Request, res: Response, next: NextFunction) => {
+        if (!req.user) {
+            throw new ErrorHandler("Please Login To Access this Resource", 401)
+        }
+
+        if (req.user.role !== role) {
+            throw new ErrorHandler("You do not have permission to access this resource", 403)
+        }
+
+        next()
+    }
+}

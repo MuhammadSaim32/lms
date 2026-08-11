@@ -122,27 +122,7 @@ export const logoutUser = catchAsync(async (req: Request, res: Response) => {
     })
 })
 
-export const updateRefreshToken = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const refreshToken = req.cookies.refreshToken || ""
 
-    if (!refreshToken) {
-        throw new ErrorHandler("unAuthorized", 401)
-    }
-
-    const user = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET as Secret) as { id: string }
-
-    if (!user) {
-        throw new ErrorHandler("unAuthorized", 401)
-    }
-
-
-    if (!userData) {
-        throw new ErrorHandler("unAuthorized", 401)
-    }
-    const userObj = JSON.parse(userData).user as IUser
-    sendTokens(userObj, 200, res)
-
-})
 
 
 
@@ -156,14 +136,7 @@ export const getUserProfile = catchAsync(async (req: Request, res: Response) => 
     })
 })
 
-export const socailLogin = catchAsync(async (req: Request, res: Response) => {
-    const { name, email, avatar } = req.body;
-    let user = await User.findOne({ email });
-    if (!user) {
-        user = await User.create({ name, email, avatar });
-    }
-    sendTokens(user, 200, res);
-});
+
 
 
 export const updateUserProfile = catchAsync(async (req: Request, res: Response) => {
@@ -239,46 +212,6 @@ export const updatePassword = catchAsync(async (req: Request, res: Response) => 
     });
 });
 
-export const updateAvatar = catchAsync(async (req: Request, res: Response) => {
-
-    if (req.body?.avatar == undefined) {
-        throw new ErrorHandler("Avatar is required", 400)
-    }
-
-
-    const { avatar } = req.body;
-
-
-    const user = req.user as IUser;
-    const userdata = await User.findById(user._id)
-
-    if (userdata == null) {
-        throw new ErrorHandler("User not found", 404);
-    }
-
-    if (!avatar) {
-        throw new ErrorHandler("Avatar is required", 400)
-    };
-
-    if (!avatar.public_id == undefined) {
-        await cloudinary.uploader.destroy(avatar.public_id)
-
-    }
-
-    const result = await cloudinary.uploader.upload(avatar)
-    userdata.avatar = {
-        public_id: result.public_id,
-        url: result.secure_url
-    }
-    await userdata.save()
-    res.status(200).json({
-        success: true,
-        message: "Avatar updated successfully",
-        data: {
-            user: userdata
-        }
-    })
-})
 
 
 
@@ -292,23 +225,6 @@ export const getAllUsers = catchAsync(async (req: Request, res: Response) => {
 
 
 
-export const updateRole = catchAsync(async (req: Request, res: Response) => {
-    const { id, role } = req.body;
-    const user = await User.findById(id);
-    if (!user) {
-        throw new ErrorHandler("User not found", 404);
-    }
-    user.role = role;
-    await user.save();
-    res.status(200).json({
-        success: true,
-        message: "Role updated successfully",
-        data: {
-            user
-        }
-    })
-
-})
 
 
 
