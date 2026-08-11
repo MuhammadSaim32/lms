@@ -1,18 +1,15 @@
-"use client"
+"use client";
 import Link from "next/link";
-import { useAuth } from "../../../../context/AuthContext"
+import { useAuth } from "../../../../context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import Loading from "../../../../components/Loading"
+import Loading from "../../../../components/Loading";
 import { usePathname } from "next/navigation";
-import Button from "../../../../components/Button"
+import Button from "../../../../components/Button";
 import toast from "react-hot-toast";
 import authApi from "../../../../api/AuthApi";
 import routes from "../../../../routes";
-const sideBar = [
-  { name: "Change Password", url: "change", provider: "local" },
-  { name: "Enrolled Courses", url: "enrolled" },
-];
+const sideBar = [{ name: "Change Password", url: "change", provider: "local" }];
 
 export default function RootLayout({
   children,
@@ -20,7 +17,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const router = useRouter();
-  const { data: userData, setData } = useAuth()
+  const { data: userData, setData } = useAuth();
 
   const handleLogout = async () => {
     try {
@@ -32,15 +29,15 @@ export default function RootLayout({
       toast.error(error.message);
     }
   };
-  const pathname = usePathname().split('/');
+  const pathname = usePathname().split("/");
   useEffect(() => {
     if (!userData?.isLoading && !userData?.isAuth) {
-      router.replace('/');
+      router.replace("/");
     }
   }, [userData, router]);
 
-  if (userData?.isLoading) return <Loading size="5rem" />
-  if (!userData?.isAuth) return <Loading size="5rem" />
+  if (userData?.isLoading) return <Loading size="5rem" />;
+  if (!userData?.isAuth) return <Loading size="5rem" />;
 
   return (
     <div className="min-h-screen h-screen bg-slate-800  flex  items-center justify-between p-3.5 ">
@@ -48,7 +45,6 @@ export default function RootLayout({
       <div className=" flex  justify-between   bg-slate-950 h-[90%] w-screen ">
         {/* side bar */}
         <div className="bg-gray-600 flex flex-col gap-6 p-3 h-full w-[20%] justify-center">
-
           <Link
             href={`/profile`}
             className={`text-center text-white h-8 ${pathname[pathname?.length - 1] == "profile" ? "bg-gray-500" : ""}`}
@@ -57,29 +53,30 @@ export default function RootLayout({
           </Link>
           {sideBar.map((item) => {
             return (
-              userData.userData.provider == "local" &&
-              <Link
-                href={`/profile/${item.url}`}
-                key={item.name}
-                className={`text-center text-white h-8 ${pathname[pathname?.length - 1] == item.url ? "bg-gray-500" : ""}`}
-              >
-                {item.name}
-              </Link>
+              userData.userData.provider == "local" && (
+                <Link
+                  href={`/profile/${item.url}`}
+                  key={item.name}
+                  className={`text-center text-white h-8 ${pathname[pathname?.length - 1] == item.url ? "bg-gray-500" : ""}`}
+                >
+                  {item.name}
+                </Link>
+              )
             );
           })}
-
-          <Link
-            className=" rounded-md"
-            href={`/admin`}
-          >
-            <div className="text-center bg-blue-700 h-10 p-2 hover:bg-blue-950   rounded-md text-white">
-              Admin Dashboard
-            </div>
-          </Link>
+          {userData?.userData?.role == "admin" && (
+            <Link className=" rounded-md" href={`/admin`}>
+              <div className="text-center bg-blue-700 h-10 p-2 hover:bg-blue-950   rounded-md text-white">
+                Admin Dashboard
+              </div>
+            </Link>
+          )}
           <Button
             text="Logout"
             type="button"
-            className={"bg-red-500 text-white cursor-pointer font-bold hover:bg-red-600"}
+            className={
+              "bg-red-500 text-white cursor-pointer font-bold hover:bg-red-600"
+            }
             onClick={handleLogout}
           />
         </div>
@@ -88,6 +85,6 @@ export default function RootLayout({
           {children}
         </div>
       </div>
-    </div >
+    </div>
   );
 }

@@ -14,7 +14,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="flex min-h-screen overflow-x-clip  h-screen bg-slate-900  w-screen">
         <AuthProvider>
-          <Protected>
+          <Protected role="admin">
             <AdminSideBar />
             <AdminHeader />
             {children}
