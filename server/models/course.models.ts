@@ -27,9 +27,7 @@ interface ICourseDatat extends Document {
             title: string;
             description: string;
             videoUrl: string;
-            thumbnail: Object;
             questions: IComment[];
-            suggestion: string
             videoLength: string
         }
     ]
@@ -90,7 +88,6 @@ const courseDataSchema = new Schema<ICourseDatat>({
             videoUrl: { type: String, required: true },
             videoLength: { type: Object, required: true },
             questions: [commentSchema],
-            suggestion: { type: String, required: true }
 
         }
 

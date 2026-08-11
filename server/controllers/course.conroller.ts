@@ -1,7 +1,6 @@
 import { type Request, type Response, type NextFunction } from "express";
 import CourseModel from "../models/course.models.js";
 import catchAsync from "../middleware/catchAsync.js";
-import { redis } from "../utils/redis.js";
 import { v2 as cloudinary } from "cloudinary";
 import ErrorHandler from "../utils/ErrorHandler.js";
 import { type IUser } from "../models/user.models.js"
@@ -38,9 +37,10 @@ export const updateCourse = catchAsync(async (req: Request, res: Response, next:
     const courseId = req.params.id;
 
     const courseData = req.body
-    const thumbnail = courseData.thumbnail
+    const thumbnail = courseData.pic
+    const public_id = courseData.public_id
     if (thumbnail) {
-        await cloudinary.uploader.destroy(courseData.thumbnail.public_id)
+        await cloudinary.uploader.destroy(public_id)
         const uploadResult = await cloudinary.uploader.upload(thumbnail, { folder: "courses" })
         courseData.thumbnail = {
             public_id: uploadResult.public_id,
@@ -66,7 +66,7 @@ export const getSingleCourse = catchAsync(async (req: Request, res: Response, ne
         throw new ErrorHandler("Course Id is required", 400);
     }
 
-    const isCache = await redis.get(courseId);
+    const isCache = false
     if (isCache) {
 
         res.status(200).json({
@@ -82,7 +82,6 @@ export const getSingleCourse = catchAsync(async (req: Request, res: Response, ne
     }
     const course = await CourseModel.findById(courseId)
 
-    await redis.set(courseId, JSON.stringify(course));
 
 
     res.status(200).json({
@@ -98,21 +97,10 @@ export const getSingleCourse = catchAsync(async (req: Request, res: Response, ne
 
 export const getAllCourses = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
 
-    const isCache = await redis.get("allCourses");
-    if (isCache) {
-        res.status(200).json({
-            success: true,
-            message: "Courses Fetched Successfully",
-            data: {
-                courses: JSON.parse(isCache)
-            }
-        })
-    }
 
 
 
     const courses = await CourseModel.find().select("-courseData.videoPlayer -courseData.videoUrl -courseData.videoSection -courseData.Links -courseData.questions -courseData.suggestions");
-    await redis.set("allCourses", JSON.stringify(courses));
     res.status(200).json({
         success: true,
         message: "Courses Fetched Successfully",
@@ -353,5 +341,4 @@ export const deleteCourse = catchAsync(async (req: Request, res: Response, next:
 //notifcation 
 //send email
 //allso setup cron job for deleteing unpurshased course after 24 hours
-//allso delte fro, the redis a single course so that data might not be stale
 

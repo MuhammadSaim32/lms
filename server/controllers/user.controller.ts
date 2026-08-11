@@ -8,7 +8,6 @@ import path from "path";
 import sendEmail from "../utils/sendMail.js";
 import bcrypt from "bcryptjs"
 import sendTokens from "../utils/jwt.js";
-import { redis } from "../utils/redis.js";
 import { v2 as cloudinary } from "cloudinary";
 
 interface IRegisterUser {
@@ -117,7 +116,6 @@ export const logoutUser = catchAsync(async (req: Request, res: Response) => {
     res.clearCookie("refreshToken");
     res.clearCookie("accessToken");
     const user = req.user as IUser;
-    // await redis.del(user._id.toString());
     res.status(200).json({
         success: true,
         message: "Logout successful"
@@ -137,7 +135,6 @@ export const updateRefreshToken = catchAsync(async (req: Request, res: Response,
         throw new ErrorHandler("unAuthorized", 401)
     }
 
-    const userData = await redis.get(user.id)
 
     if (!userData) {
         throw new ErrorHandler("unAuthorized", 401)
@@ -194,7 +191,6 @@ export const updateUserProfile = catchAsync(async (req: Request, res: Response) 
     dbUser.name = name || dbUser.name
 
     await dbUser.save()
-    await redis.set(dbUser._id.toString(), JSON.stringify({ user: dbUser }))
     res.status(200).json({
         success: true,
         message: "Profile updated successfully",
@@ -275,7 +271,6 @@ export const updateAvatar = catchAsync(async (req: Request, res: Response) => {
         url: result.secure_url
     }
     await userdata.save()
-    await redis.set(userdata._id.toString(), JSON.stringify({ user: userdata }))
     res.status(200).json({
         success: true,
         message: "Avatar updated successfully",
@@ -325,7 +320,6 @@ export const deleteUser = catchAsync(async (req: Request, res: Response) => {
     }
     await user.deleteOne();
 
-    await redis.del(user._id.toString())
     res.status(200).json({
 
         success: true,
@@ -482,13 +476,13 @@ export const getUsersAnalytics = catchAsync(async (req: Request, res: Response) 
         }
     ])
 
-    const months=[{name: "January",count: 0}, {name: "February", count: 0}, {name: "March", count: 0}, {name: "April", count: 0}, {name: "May", count: 0}, {name: "June", count: 0}, {name: "July", count: 0}, {name: "August", count: 0}, {name: "September", count: 0}, {name: "October", count: 0}, {name: "November", count: 0}, {name: "December", count: 0}]
-   const analyticsdata = data.map((item) => {
+    const months = [{ name: "January", count: 0 }, { name: "February", count: 0 }, { name: "March", count: 0 }, { name: "April", count: 0 }, { name: "May", count: 0 }, { name: "June", count: 0 }, { name: "July", count: 0 }, { name: "August", count: 0 }, { name: "September", count: 0 }, { name: "October", count: 0 }, { name: "November", count: 0 }, { name: "December", count: 0 }]
+    const analyticsdata = data.map((item) => {
         const monthIndex = item._id - 1;
         months[monthIndex].count = item.totalCount;
     })
 
-    console.log("here is any",months)
+    console.log("here is any", months)
     res.status(200).json({
         success: true,
         months

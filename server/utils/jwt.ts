@@ -1,15 +1,13 @@
 
 import { type Response } from "express";
 import { type IUser } from "../models/user.models.js";
-import { redis } from "./redis.js"
 
 const sendTokens = (user: IUser, statusCode: number, res: Response) => {
     const accessToken = user.giveAccessToken()
     const refreshToken = user.giveRefreshToken()
 
     const userData = user.toObject();
-    delete userData.password; 
-    redis.set(userData._id.toString(), JSON.stringify({ user:userData }))
+    delete userData.password;
 
     res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
@@ -27,9 +25,9 @@ const sendTokens = (user: IUser, statusCode: number, res: Response) => {
     res.status(statusCode).json({
         success: true,
         message: "Login successful",
-        data:{
+        data: {
             userData,
-            token:accessToken
+            token: accessToken
         }
     })
 

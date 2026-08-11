@@ -8,7 +8,6 @@ import path from "path";
 import sendEmail from "../utils/sendMail.js";
 import bcrypt from "bcryptjs"
 import sendTokens from "../utils/jwt.js";
-import { redis } from "../utils/redis.js";
 import { v2 as cloudinary } from "cloudinary";
 import Course from "../models/course.models.js";
 import Order from "../models/order.models.js";
