@@ -73,7 +73,7 @@ export const getSingleCourse = catchAsync(async (req: Request, res: Response, ne
 
     let courseToReturn = course;
 
-    if (!req.user || req.user.role !== "admin") {
+    if (!req.user) {
         courseToReturn = {
             name: course.name,
             description: course.description,

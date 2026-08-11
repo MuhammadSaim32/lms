@@ -6,7 +6,7 @@ CourseRouter.use(express.json({ limit: "50mb" }))
 
 CourseRouter.post("/upload-course", AuthMiddleware, RoleMiddleware("admin"), uploadCourse)
 CourseRouter.put("/update-course/:id", AuthMiddleware, RoleMiddleware("admin"), updateCourse)
-CourseRouter.get("/get-course/:id", getSingleCourse)
+CourseRouter.get("/get-course/:id", AuthMiddleware, getSingleCourse)
 CourseRouter.get("/get-all-courses", getAllCourses)
 CourseRouter.put("/add-question", AuthMiddleware, addQuestion)
 CourseRouter.put("/add-answer", AuthMiddleware, addAnswer)
