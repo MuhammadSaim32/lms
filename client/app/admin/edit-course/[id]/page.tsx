@@ -37,6 +37,7 @@ export default function EditCourse() {
                             courseTags: course.tags ? course.tags.join(", ") : "",
                             courseLevel: course.level || "",
                             demoUrl: course.demoUrl || "",
+                            pic:course.thumbnail.url || ""
                         },
                         courseOptions: {
                             benifits: (course.benefits || []).map((b: any) => ({

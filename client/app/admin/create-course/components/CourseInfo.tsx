@@ -1,6 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useFormik } from "formik";
-import { useRef } from "react";
 import Button from "@/components/Button";
 import *  as yup from "yup"
 export default function courseInfo({ setcourseData, setStep, initialValues }: any) {
@@ -15,9 +14,21 @@ export default function courseInfo({ setcourseData, setStep, initialValues }: an
         courseTags: yup.string().required("Course tags is required"),
         courseLevel: yup.string().required("Course level is required"),
         demoUrl: yup.string().required("Demo url is required"),
-        pic: yup.mixed().required("course pic is requried"),
+        pic: yup.mixed()
+            .required("Course pic is required")
+            .test("fileType", "Only image files are allowed", value => {
+                if (!value) return false;
+                if (typeof value === "string") return true;
+                return value.type && value.type.startsWith("image/");
+            }),
 
     })
+
+    useEffect(() => {
+        if (initialValues && initialValues.pic && typeof initialValues.pic === "string") {
+            setFileUrl(initialValues.pic);
+        }
+    }, [initialValues]);
 
 
     const formik = useFormik({
@@ -34,20 +45,21 @@ export default function courseInfo({ setcourseData, setStep, initialValues }: an
         enableReinitialize: true,
         validationSchema: courseInfoSchema,
         onSubmit: async values => {
-            const base64: string = await new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () => resolve(reader.result as string);
-                reader.onerror = reject;
-                reader.readAsDataURL(values.pic as unknown as File);
-            });
+            if (typeof values.pic !== "string") {
+                const base64: string = await new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(reader.result as string);
+                    reader.onerror = reject;
+                    reader.readAsDataURL(values.pic as unknown as File);
+                });
+
+                values.pic = base64;
+            }
 
 
-            values.pic = base64
-            console.log(values)
+            setcourseData((prev: any) => ({ ...prev, courseInfo: values }));
 
-            setcourseData((prev: any) => ({ ...prev, courseInfo: values }))
-
-            setStep(2)
+            setStep(2);
 
         },
     });
@@ -166,14 +178,20 @@ export default function courseInfo({ setcourseData, setStep, initialValues }: an
                 </div>
                 <input
                     type="file"
+                    accept="image/*"
                     ref={fileRef}
                     className="border h-12 text-center hidden"
                     name="pic"
 
                     onChange={(event) => {
-                        if (!event.currentTarget) return
-                        formik.setFieldValue('pic', event.currentTarget.files[0]);
-                        const generatedUrl = URL.createObjectURL(event.currentTarget.files[0]);
+                        const file = event.currentTarget.files?.[0];
+                        if (!file) return;
+                        if (!file.type.startsWith("image/")) {
+                            formik.setFieldError('pic', 'Only image files are allowed');
+                            return;
+                        }
+                        formik.setFieldValue('pic', file);
+                        const generatedUrl = URL.createObjectURL(file);
                         setFileUrl(generatedUrl);
                     }}
                 />
