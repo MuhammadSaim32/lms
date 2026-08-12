@@ -2,4 +2,5 @@
 
 .env.development
 .env.production
+!.env.sample
 node_modules/

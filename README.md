@@ -14,15 +14,12 @@ The platform provides course management, video-based learning, authentication, p
 * 🔔 Real-time notifications with Socket.io
 * ⭐ Course reviews
 * ☁️ Cloudinary media storage
-* 📱 Responsive UI
 
 ## 🛠️ Tech Stack
 
 **Frontend**
 
 * Next.js 16
-* React
-* Redux
 * Tailwind CSS
 * Shadcn UI
 
@@ -42,37 +39,6 @@ The platform provides course management, video-based learning, authentication, p
 * AWS EC2
 * GitHub Actions
 
-## 🏗️ Architecture
-
-```mermaid
-flowchart LR
-
-    User["User"]
-
-    Next["Next.js"]
-
-    API["Express API"]
-
-    Mongo[("MongoDB")]
-
-    Socket["Socket.io"]
-
-    Stripe["Stripe"]
-
-    Cloudinary["Cloudinary"]
-
-    User --> Next
-    Next --> API
-
-    API --> Mongo
-    API --> Socket
-    API --> Stripe
-    API --> Cloudinary
-```
-
-Detailed architecture:
-
-➡️ [`ARCHITECTURE.md`](./ARCHITECTURE.md)
 
 ## 🚀 Local Setup
 
@@ -91,12 +57,24 @@ cd ../server
 npm install
 ```
 
-Configure:
+Configure environment variables:
+
+Create development env files for each project by copying the provided templates and filling in secrets.
 
 ```text
-client/.env.local
-server/.env
+# Frontend (Next.js)
+cp client/.env.sample client/.env.development
+
+# Backend (Express)
+cp server/.env.sample server/.env.development
 ```
+
+Fill the following files with your secrets (examples provided in each file):
+
+- `client/.env.sample` — sample Next.js envs (public keys start with `NEXT_PUBLIC_`).
+- `server/.env.sample` — sample server envs (DB, JWT, Stripe, Cloudinary, email, etc.).
+
+When deploying, set production environment variables or rename/copy the sample files appropriately.
 
 Run the application:
 
@@ -140,7 +118,7 @@ The application's UI and design were developed with the assistance of AI. The ar
 
 ## 📚 Documentation
 
-* [`ARCHITECTURE.md`](./ARCHITECTURE.md) — Application architecture
+
 * [`DEPLOYMENT-ARCHITECTURE.md`](./DEPLOYMENT-ARCHITECTURE.md) — Deployment & CI/CD
 * [`server/API_DOCS.md`](./server/API_DOCS.md) — API documentation
 
