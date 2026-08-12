@@ -160,10 +160,10 @@ export default function CourseDetail() {
             <div className="bg-slate-900/90 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-xl">
               {/* Media Preview Container */}
               <div className="relative aspect-video bg-black w-full overflow-hidden">
-                {course?.videoUrl ? (
+                {course?.demoUrl ? (
                   <iframe
                     className="w-full h-full"
-                    src={`https://www.youtube.com/embed/${course?.videoUrl}?autoplay=0&rel=0`}
+                    src={`https://www.youtube.com/embed/${course?.demoUrl}?autoplay=0&rel=0`}
                     title="Course Preview"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen

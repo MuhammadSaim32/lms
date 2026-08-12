@@ -25,7 +25,13 @@ export default function CourseInfo({
     estimatedPrice: yup.number(),
     courseTags: yup.string().required("Course tags is required"),
     courseLevel: yup.string().required("Course level is required"),
-    demoUrl: yup.string().required("Demo url is required"),
+    demoUrl: yup
+      .string()
+      .matches(
+        /^[A-Za-z0-9_-]{11}$/,
+        "Video ID must be a valid 11-character YouTube ID"
+      )
+      .required("Video ID is required"),
     pic: yup
       .mixed()
       .required("Course thumbnail is required")
@@ -208,7 +214,7 @@ export default function CourseInfo({
 
               <div className="space-y-2">
                 <label htmlFor="demoUrl" className="block text-xs font-semibold text-slate-300">
-                  Demo Video URL <span className="text-rose-400">*</span>
+                  Demo Video ID <span className="text-rose-400">*</span>
                 </label>
                 <input
                   id="demoUrl"
@@ -251,11 +257,10 @@ export default function CourseInfo({
 
               <div
                 onClick={() => fileRef.current?.click()}
-                className={`w-full min-h-[160px] border-2 border-dashed rounded-xl p-4 flex flex-col items-center justify-center cursor-pointer transition-all ${
-                  fileUrl
+                className={`w-full min-h-[160px] border-2 border-dashed rounded-xl p-4 flex flex-col items-center justify-center cursor-pointer transition-all ${fileUrl
                     ? "border-indigo-500/60 bg-indigo-500/5 hover:bg-indigo-500/10"
                     : "border-slate-800 bg-slate-950/60 hover:border-slate-700 hover:bg-slate-900/60"
-                }`}
+                  }`}
               >
                 {fileUrl ? (
                   <div className="relative group w-full flex flex-col items-center">
