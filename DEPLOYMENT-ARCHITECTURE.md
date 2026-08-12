@@ -75,51 +75,6 @@ flowchart LR
     Docker --> App
 ```
 
-## Deployment Flow
-
-```text
-Developer
-    │
-    │ git push
-    ▼
-GitHub
-    │
-    │ workflow trigger
-    ▼
-GitHub Actions
-    │
-    │ SSH
-    ▼
-AWS EC2
-    │
-    ├── git pull
-    │
-    ├── Docker Compose
-    │
-    └── Nginx
-           │
-           ├── Next.js :3000
-           │
-           └── Express :8000
-```
-
-## Docker Architecture
-
-```mermaid
-flowchart TB
-
-    Compose["Docker Compose"]
-
-    Client["Next.js Container<br/>Port 3000"]
-
-    Server["Express Container<br/>Port 8000"]
-
-    Compose --> Client
-    Compose --> Server
-
-    Client --> Server
-```
-
 ## Nginx Routing
 
 ```mermaid
@@ -137,26 +92,6 @@ flowchart LR
 
     Nginx -->|"/"| Frontend
     Nginx -->|"/api/"| Backend
-```
-
-Production requests therefore follow:
-
-```text
-https://your-domain.com/
-        ↓
-      Nginx
-        ↓
-   Next.js :3000
-```
-
-and:
-
-```text
-https://your-domain.com/api/v1/...
-        ↓
-      Nginx
-        ↓
-  Express :8000
 ```
 
 ## Deployment Documentation
