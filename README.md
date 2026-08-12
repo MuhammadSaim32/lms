@@ -1,8 +1,8 @@
 # LMS — Learning Management System
 
-A full-stack Learning Management System built with **Next.js, Node.js, Express, MongoDB, Redis, and Socket.io**.
+A full-stack Learning Management System built with **Next.js, Node.js, Express, and MongoDB**.
 
-The platform supports course management, video-based learning, payments, authentication, admin management, and real-time notifications.
+The platform provides course management, video-based learning, authentication, payments, an admin dashboard, and real-time notifications.
 
 ## ✨ Features
 
@@ -12,11 +12,9 @@ The platform supports course management, video-based learning, payments, authent
 * 💳 Stripe payments
 * 👨‍💼 Admin dashboard
 * 🔔 Real-time notifications with Socket.io
-* 👤 User profiles and course reviews
+* ⭐ Course reviews
 * ☁️ Cloudinary media storage
-* ⚡ Redis integration
 * 📱 Responsive UI
-* 🐳 Dockerized deployment
 
 ## 🛠️ Tech Stack
 
@@ -33,7 +31,6 @@ The platform supports course management, video-based learning, payments, authent
 * Node.js
 * Express.js
 * MongoDB
-* Redis
 * Socket.io
 
 **Services & Infrastructure**
@@ -49,15 +46,28 @@ The platform supports course management, video-based learning, payments, authent
 
 ```mermaid
 flowchart LR
-    User["User"] --> Next["Next.js"]
-    Next --> API["Express API"]
 
-    API --> Mongo[("MongoDB")]
-    API --> Redis[("Redis")]
-    API --> Socket["Socket.io"]
+    User["User"]
 
-    API --> Stripe["Stripe"]
-    API --> Cloudinary["Cloudinary"]
+    Next["Next.js"]
+
+    API["Express API"]
+
+    Mongo[("MongoDB")]
+
+    Socket["Socket.io"]
+
+    Stripe["Stripe"]
+
+    Cloudinary["Cloudinary"]
+
+    User --> Next
+    Next --> API
+
+    API --> Mongo
+    API --> Socket
+    API --> Stripe
+    API --> Cloudinary
 ```
 
 Detailed architecture:
@@ -74,18 +84,21 @@ cd lms
 Install dependencies:
 
 ```bash
-cd client && npm install
-cd ../server && npm install
+cd client
+npm install
+
+cd ../server
+npm install
 ```
 
-Configure your environment variables in:
+Configure:
 
 ```text
 client/.env.local
 server/.env
 ```
 
-Then run the applications:
+Run the application:
 
 ```bash
 # Server
@@ -97,15 +110,13 @@ cd client
 npm run dev
 ```
 
-Or use Docker Compose:
+Or:
 
 ```bash
 docker compose up -d
 ```
 
 ## ☁️ Deployment
-
-The application is deployed using:
 
 ```text
 GitHub
@@ -121,22 +132,20 @@ Nginx
 Next.js + Express
 ```
 
-Detailed deployment and CI/CD documentation:
-
-➡️ [`2-deployment-and-cicd.md`](./2-deployment-and-cicd.md)
+➡️ [`DEPLOYMENT-ARCHITECTURE.md`](./DEPLOYMENT-ARCHITECTURE.md)
 
 ## 🤖 AI-Assisted Design
 
-The application's UI and design system were developed with the assistance of AI, while the application architecture, backend, APIs, integrations, and deployment were implemented as part of the project.
+The application's UI and design were developed with the assistance of AI. The architecture, backend, APIs, integrations, and deployment were implemented as part of the project.
 
 ## 📚 Documentation
 
-* [`ARCHITECTURE.md`](./ARCHITECTURE.md) — System architecture & diagrams
-* [`2-deployment-and-cicd.md`](./2-deployment-and-cicd.md) — AWS EC2, Docker, Nginx & CI/CD
-* [`server/API_DOCS.md`](./server/API_DOCS.md) — Backend API documentation
+* [`ARCHITECTURE.md`](./ARCHITECTURE.md) — Application architecture
+* [`DEPLOYMENT-ARCHITECTURE.md`](./DEPLOYMENT-ARCHITECTURE.md) — Deployment & CI/CD
+* [`server/API_DOCS.md`](./server/API_DOCS.md) — API documentation
 
 ## 🔗 Links
 
-* [GitHub Repository](https://github.com/MuhammadSaim32/lms)
+* [GitHub](https://github.com/MuhammadSaim32/lms)
 * [DeepWiki](https://deepwiki.com/MuhammadSaim32/lms)
 * [Deployment Guide](https://medium.com/@muhammadsaim32/deploying-a-mern-stack-web-app-with-docker-nginx-and-github-actions-on-aws-ec2)
