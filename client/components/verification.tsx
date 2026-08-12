@@ -58,9 +58,14 @@ const Verification = ({ setRoute }: Props) => {
     };
 
     return (
-        <form onSubmit={formik.handleSubmit} className='flex flex-col items-center gap-6'>
-            <h1 className='font-bold text-2xl'>Verify Your Account</h1>
-            <VerifiedUserIcon fontSize="large" color="primary" />
+        <form onSubmit={formik.handleSubmit} className='flex flex-col items-center gap-6 w-full'>
+            <div className="text-center mb-2">
+                <h1 className='text-3xl font-extrabold text-white bg-gradient-to-r from-white via-slate-200 to-indigo-300 bg-clip-text text-transparent mb-2'>Verify Account</h1>
+                <p className="text-sm text-slate-400">Enter the 4-digit code sent to your email</p>
+            </div>
+            <div className="w-16 h-16 rounded-full bg-indigo-500/10 flex items-center justify-center border border-indigo-500/20 shadow-[0_0_15px_rgba(99,102,241,0.2)]">
+                <VerifiedUserIcon className="text-indigo-400" sx={{ fontSize: 32 }} />
+            </div>
             <div className='flex gap-6'>
                 {formik.values.code.map((value, idx) => (
                     
@@ -72,7 +77,7 @@ const Verification = ({ setRoute }: Props) => {
                         name={`code.${idx}`}
                         type="number"
                         maxLength={1}
-                        className='w-10 border h-10  outline-0 text-center  [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none'
+                        className='w-14 h-14 bg-slate-900/50 border border-slate-800 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-xl text-center text-2xl font-bold text-white outline-none transition-all shadow-inner [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none'
                         onInput={(e) => {
                             const target = e.target
                             if (target.value.length != 1) {
@@ -94,17 +99,19 @@ const Verification = ({ setRoute }: Props) => {
 
             <button type="submit"
                 disabled={formik.isSubmitting}
-                className={`mt-4 px-4 py-2 bg-blue-500 text-white rounded cursor-pointer hover:bg-blue-600 ${formik.isSubmitting ? "pointer-none bg-blue-600" : ""}`}>
-                {formik.isSubmitting ? "verifying.." : " Verify OTP"}
+                className={`w-full py-3 px-5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold text-sm rounded-xl shadow-lg shadow-indigo-600/20 transition-all cursor-pointer disabled:opacity-40 ${formik.isSubmitting ? "pointer-events-none opacity-70" : ""}`}>
+                {formik.isSubmitting ? "Verifying..." : "Verify OTP"}
             </button>
 
-            <div>Go Back to Sign in?
-                <Button
-                    text="Sign in"
-                    type="submit"
-                    className={"bg-slate-900 text-blue-500 cursor-pointer"}
+            <div className="text-center text-sm text-slate-400 mt-2 pt-4 border-t border-slate-800 w-full">
+                Go back to{" "}
+                <button
+                    type="button"
+                    className="text-indigo-400 font-bold hover:text-indigo-300 hover:underline transition-all cursor-pointer"
                     onClick={() => setRoute("login")}
-                />
+                >
+                    Sign in
+                </button>
             </div>
         </form>
     );

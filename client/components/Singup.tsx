@@ -70,9 +70,11 @@ const Singup = ({ setRoute }: { setRoute: (val: string) => void }) => {
     });
     return (
 
-        <form onSubmit={formik.handleSubmit} className="gap-3 flex justify-evenly flex-col items-center ">
-
-            <h1 className="text-2xl font-bold mb-5">Join With Elearning</h1>
+        <form onSubmit={formik.handleSubmit} className="space-y-5 w-full">
+            <div className="mb-6">
+                <h1 className="text-3xl font-extrabold text-white text-center bg-gradient-to-r from-white via-slate-200 to-indigo-300 bg-clip-text text-transparent">Join Elearning</h1>
+                <p className="text-sm text-slate-400 text-center mt-2">Create an account to start learning</p>
+            </div>
 
 
             <div className="flex justify-between flex-col">
@@ -81,8 +83,8 @@ const Singup = ({ setRoute }: { setRoute: (val: string) => void }) => {
                     type="text"
                     htmtFor={"name"}
                     placeholder="Enter your name"
-                    labelText="Enter Your Name"
-                    className={"w-full mt-2"}
+                    labelText="Full Name"
+                    className=""
 
                     {...formik.getFieldProps('name')}
 
@@ -97,8 +99,8 @@ const Singup = ({ setRoute }: { setRoute: (val: string) => void }) => {
                     type="email"
                     htmtFor={"email"}
                     placeholder="Enter your email address"
-                    labelText="Enter Your Email"
-                    className={"w-full mt-2"}
+                    labelText="Email Address"
+                    className=""
 
 
                     {...formik.getFieldProps('email')}
@@ -114,8 +116,8 @@ const Singup = ({ setRoute }: { setRoute: (val: string) => void }) => {
                     type="password"
                     htmtFor="password"
                     placeholder="Enter your password"
-                    labelText="Enter Your Password"
-                    className="w-full mt-2"
+                    labelText="Password"
+                    className=""
                     error={formik.touched.password && formik.errors.password ? formik.errors.password : null}
                     {...formik.getFieldProps('password')}
 
@@ -124,35 +126,39 @@ const Singup = ({ setRoute }: { setRoute: (val: string) => void }) => {
 
             </div>
             <Button
-                text={formik.isSubmitting ? "Submitting..." : "Sign Up"}
+                text={formik.isSubmitting ? "Signing Up..." : "Sign Up"}
                 type="submit"
-                className={`w-full mr-2a active:bg-blue-900  cursor-pointer hover:bg-blue-700 ${formik.isSubmitting ? "pointer-events-none" : ""}`}
+                className={`w-full py-3 px-5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold text-sm rounded-xl shadow-lg shadow-indigo-600/20 transition-all cursor-pointer disabled:opacity-40 ${formik.isSubmitting ? "pointer-events-none opacity-70" : ""}`}
                 disabled={formik.isSubmitting}
-
             />
-            <div className=" flex flex-col mt-2">
-                <div className="font-bold">Or Join with</div>
-                <div className="flex justify-center gap-1 mt-3">
-                    <Link href={`${process.env.NEXT_PUBLIC_GITHUB_URI}`} >
-
+            <div className="flex flex-col items-center mt-6">
+                <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4 relative w-full text-center">
+                    <span className="bg-[#0f172a] px-3 relative z-10">Or Join With</span>
+                    <div className="absolute top-1/2 left-0 w-full h-px bg-slate-800 -z-0"></div>
+                </div>
+                <div className="flex justify-center gap-4 w-full">
+                    <Link href={`${process.env.NEXT_PUBLIC_GITHUB_URI}`} className="flex-1 flex justify-center py-2.5 bg-slate-800/50 hover:bg-slate-700 border border-slate-700 hover:border-slate-600 rounded-xl transition-all cursor-pointer text-slate-300 hover:text-white">
                         <GitHubIcon />
                     </Link>
                     <button
-                    type="button"
-                        className="cursor-pointer"
-                        onClick={handleGoolgeAuth}>
+                        type="button"
+                        className="flex-1 flex justify-center py-2.5 bg-slate-800/50 hover:bg-slate-700 border border-slate-700 hover:border-slate-600 rounded-xl transition-all cursor-pointer text-slate-300 hover:text-white"
+                        onClick={handleGoolgeAuth}
+                    >
                         <GoogleIcon />
                     </button>
                 </div>
             </div>
 
-            <div>Already Have And  Account?
-                <Button
-                    text="Login"
-                    type="submit"
-                    className={"bg-slate-900 text-blue-500 cursor-pointer"}
+            <div className="text-center text-sm text-slate-400 mt-6 pt-4 border-t border-slate-800">
+                Already have an account?{" "}
+                <button
+                    type="button"
+                    className="text-indigo-400 font-bold hover:text-indigo-300 hover:underline transition-all cursor-pointer"
                     onClick={() => setRoute("login")}
-                />
+                >
+                    Login
+                </button>
             </div>
         </form>
 
