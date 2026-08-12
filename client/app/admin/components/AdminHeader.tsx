@@ -14,9 +14,8 @@ export default function AdminHeader() {
   const [noData, SetnoData] = useState<any[]>([]);
 
   useEffect(() => {
-    const socketInstance = io(process.env.NEXT_PUBLIC_SERVER_URI);
+    const socketInstance = io(window.location.origin, { path: "/ws" });
     setSocket(socketInstance);
-
     socketInstance.on("notification", (data) => {
       console.log("Real-time event received:", data);
       let sound = new Audio("/sounds/noti.wav");

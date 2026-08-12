@@ -13,13 +13,20 @@ import morgan from 'morgan';
 const app = express();
 export const httpServer = createServer(app)
 const io = new Server(httpServer, {
+    path: "/ws",
     cors: {
         origin: process.env.ORIGIN,
         credentials: true
     }
 });
 
+io.on('connection', (socket) => {
+    console.log('A user connected:', socket.id);
 
+    socket.on('disconnect', () => {
+        console.log('A user disconnected:', socket.id);
+    });
+})
 
 app.use(cors({
     origin: process.env.ORIGIN,
