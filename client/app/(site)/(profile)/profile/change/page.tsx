@@ -7,6 +7,7 @@ import Button from "../../../../../components/Button";
 import toast from "react-hot-toast";
 import authApi from "../../../../../api/AuthApi";
 import routes from "../../../../../routes/index";
+import LockResetIcon from "@mui/icons-material/LockReset";
 
 const PasswordSchema = yup.object({
   oldPassword: yup.string().required("Current password is required"),
@@ -42,59 +43,79 @@ export default function ChangePassword() {
   });
 
   return (
-    <form
-      onSubmit={formik.handleSubmit}
-      className="gap-3 flex justify-evenly flex-col items-center"
-    >
-
-
-
-      <div className="flex justify-between flex-col">
-        <Input
-          id="oldPassword"
-          type="password"
-          htmtFor="oldPassword"
-          labelclassName="text-white"
-          labelText="Current Password"
-          className="w-full mt-2 text-white"
-          error={formik.touched.oldPassword && formik.errors.oldPassword ? formik.errors.oldPassword : null}
-          {...formik.getFieldProps("oldPassword")}
-        />
+    <div className="w-full max-w-lg space-y-6">
+      <div className="border-b border-slate-800 pb-4">
+        <h1 className="text-2xl font-extrabold text-white flex items-center gap-2.5">
+          <LockResetIcon className="text-indigo-400" />
+          Change Password
+        </h1>
+        <p className="text-xs text-slate-400 mt-1">
+          Ensure your account is using a long, random password to stay secure
+        </p>
       </div>
 
+      <form onSubmit={formik.handleSubmit} className="space-y-4">
+        <div>
+          <Input
+            id="oldPassword"
+            type="password"
+            htmtFor="oldPassword"
+            labelclassName="text-slate-300 font-semibold text-sm"
+            labelText="Current Password"
+            className="w-full mt-1 bg-slate-900 border border-slate-800 focus:border-indigo-500 rounded-xl p-3 text-sm text-white outline-none"
+            error={
+              formik.touched.oldPassword && formik.errors.oldPassword
+                ? formik.errors.oldPassword
+                : null
+            }
+            {...formik.getFieldProps("oldPassword")}
+          />
+        </div>
 
-      <div className="flex justify-between flex-col">
-        <Input
-          id="newPassword"
-          type="password"
-          htmtFor="newPassword"
-          labelclassName="text-white"
-          labelText="Confirm Password "
-          className="w-full mt-2 text-white"
-          error={formik.touched.newPassword && formik.errors.newPassword ? formik.errors.newPassword : null}
-          {...formik.getFieldProps("newPassword")}
-        />
-      </div>
-      <div className="flex justify-between flex-col">
-        <Input
-          id="confirmPassword"
-          type="password"
-          htmtFor="confirmPassword"
-          labelText="Confirm Password"
-          className="w-full mt-2 text-white"
-          labelclassName="text-white"
+        <div>
+          <Input
+            id="newPassword"
+            type="password"
+            htmtFor="newPassword"
+            labelclassName="text-slate-300 font-semibold text-sm"
+            labelText="New Password"
+            className="w-full mt-1 bg-slate-900 border border-slate-800 focus:border-indigo-500 rounded-xl p-3 text-sm text-white outline-none"
+            error={
+              formik.touched.newPassword && formik.errors.newPassword
+                ? formik.errors.newPassword
+                : null
+            }
+            {...formik.getFieldProps("newPassword")}
+          />
+        </div>
 
-          error={formik.touched.confirmPassword && formik.errors.confirmPassword ? formik.errors.confirmPassword : null}
-          {...formik.getFieldProps("confirmPassword")}
-        />
-      </div>
+        <div>
+          <Input
+            id="confirmPassword"
+            type="password"
+            htmtFor="confirmPassword"
+            labelText="Confirm New Password"
+            labelclassName="text-slate-300 font-semibold text-sm"
+            className="w-full mt-1 bg-slate-900 border border-slate-800 focus:border-indigo-500 rounded-xl p-3 text-sm text-white outline-none"
+            error={
+              formik.touched.confirmPassword && formik.errors.confirmPassword
+                ? formik.errors.confirmPassword
+                : null
+            }
+            {...formik.getFieldProps("confirmPassword")}
+          />
+        </div>
 
-      <Button
-        text={formik.isSubmitting ? "Updating..." : "Update Password"}
-        type="submit"
-        className={`w-full cursor-pointer ${  formik.dirty ?'hover:bg-blue-700 active:bg-blue-900':""} ${formik.isSubmitting ? "pointer-events-none" : ""}`}
-        disabled={!formik.dirty || formik.isSubmitting}
-      />
-    </form>
+        <div className="pt-4">
+          <Button
+            text={formik.isSubmitting ? "Updating..." : "Update Password"}
+            type="submit"
+            className="w-full py-3 px-5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold text-sm rounded-xl shadow-lg shadow-indigo-600/20 transition-all cursor-pointer disabled:opacity-40"
+            disabled={!formik.dirty || formik.isSubmitting}
+          />
+        </div>
+      </form>
+    </div>
   );
 }
+

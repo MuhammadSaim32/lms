@@ -168,12 +168,19 @@ export default function EditCourse() {
       )}
       {step === 3 && (
         <CourseContent
-          handleSubmit={handleSubmit}
+          setcourseData={setcourseData}
           setStep={setStep}
           initialValues={courseData.courseContent}
         />
       )}
-      {step === 4 && <CoursePreview courseData={courseData} />}
+      {step === 4 && (
+        <CoursePreview
+          courseData={courseData}
+          setStep={setStep}
+          isEdit={true}
+          courseId={id}
+        />
+      )}
     </div>
   );
 }

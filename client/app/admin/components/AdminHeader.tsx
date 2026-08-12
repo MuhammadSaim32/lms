@@ -1,8 +1,8 @@
 "use client";
 
 import Badge from "@mui/material/Badge";
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import { io, Socket } from "socket.io-client";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import { io } from "socket.io-client";
 import { useEffect, useState } from "react";
 import NotificatoinModel from "../../admin/components/NotificationModel";
 import notificationApi from "../../../api/NotificationApi";
@@ -23,16 +23,15 @@ export default function AdminHeader() {
       sound.play();
 
       SetnoData((prev) => [...prev, data]);
-      // Increment the badge counter whenever a new message lands
     });
 
     const fetchNotifications = async () => {
       try {
         const res = await notificationApi.getNotifications(
-          routes.getAllNotification,
+          routes.getAllNotification
         );
         const unread = res.notifications.filter(
-          (item: any) => item.status === "unread",
+          (item: any) => item.status === "unread"
         );
         SetnoData(unread);
       } catch (err) {
@@ -47,7 +46,7 @@ export default function AdminHeader() {
   }, []);
 
   return (
-    <div className="flex justify-end mr-14  h-[10%] ">
+    <header className="h-14 bg-slate-900/90 border-b border-slate-800 backdrop-blur-md px-6 flex items-center justify-end text-slate-100 shrink-0">
       <NotificatoinModel
         open={open}
         setOpen={setOpen}
@@ -57,15 +56,27 @@ export default function AdminHeader() {
         }
       />
       <button
-        className=""
-        onClick={() => {
-          setOpen(!open);
-        }}
+        onClick={() => setOpen(!open)}
+        className="p-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors cursor-pointer relative"
+        title="Notifications"
       >
-        <Badge badgeContent={noData.length || 0} color="secondary" max={100}>
-          <NotificationsIcon />
+        <Badge
+          badgeContent={noData.length || 0}
+          color="error"
+          max={99}
+          sx={{
+            "& .MuiBadge-badge": {
+              backgroundColor: "#6366f1",
+              color: "#ffffff",
+              fontSize: "10px",
+              height: "18px",
+              minWidth: "18px",
+            },
+          }}
+        >
+          <NotificationsIcon fontSize="small" />
         </Badge>
       </button>
-    </div>
+    </header>
   );
 }
