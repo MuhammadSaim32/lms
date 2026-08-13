@@ -47,7 +47,7 @@ app.set('trust proxy', 1);
 app.use(cookieParser());
 app.use(morgan(':remote-addr :method :url :status :response-time ms - :date[iso]'));
 
-app.get("/test", (_, res) => {
+app.get("/api/v1/test", (_, res) => {
     res.status(200).json({
         success: true,
         message: "Api is working..."
