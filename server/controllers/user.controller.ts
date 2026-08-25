@@ -41,7 +41,6 @@ export const registerUser = catchAsync(async (req: Request, res: Response, next:
     const user: IRegisterUser = {
         name,
         email,
-        password,
     }
 
 
