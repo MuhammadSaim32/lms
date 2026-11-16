@@ -1,4 +1,9 @@
 services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx-server
+    ports:
+      - "80:80"
   server:
     build:
       context: ./server
